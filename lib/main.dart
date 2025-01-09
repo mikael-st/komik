@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:komik/assets/palette.dart';
+import 'package:komik/components/tool-bars/nav-bar.dart';
 import 'package:komik/components/tool-bars/tool_bar.dart';
+import 'package:komik/pages/home_page.dart';
 
 void main() {
   runApp(const KomikApp());
@@ -24,9 +26,8 @@ class KomikApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: ToolBar(),
-        body: Center(
-          child: Text('OK!!', style: TextStyle(color: Palette.white),),
-        ),
+        body: HomePage(),
+        bottomNavigationBar: NavBar(),
       )
     );
   }
