@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:komik/components/cards/comic.dart';
 import 'package:komik/components/cards/reading_comic.dart';
 import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/utils/scroller/scroller.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class LibraryPage extends StatelessWidget {
+  const LibraryPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +58,7 @@ class HomePage extends StatelessWidget {
         ),
         Column(
           spacing: 12,
-          children: List.generate(5, (index) => ReadingComic()),
+          children: List.generate(5, (index) => Comic()),
         )
       ],
     );
