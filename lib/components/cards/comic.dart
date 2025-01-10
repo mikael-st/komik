@@ -4,7 +4,13 @@ import 'package:komik/components/buttons/options_btn.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
 
 class Comic extends StatelessWidget {
-  const Comic({super.key});
+  final String title;
+  final String subtitle;
+  const Comic({
+    super.key,
+    required this.title,
+    required this.subtitle
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -46,8 +52,8 @@ class Comic extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Title', style: KomikTypography.card_title),
-          Text('00 - 00 editions', style: KomikTypography.subtitles)
+          Text(title, style: KomikTypography.card_title),
+          Text(subtitle, style: KomikTypography.subtitles)
         ],
       )
     )

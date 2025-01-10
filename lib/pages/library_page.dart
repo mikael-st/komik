@@ -12,12 +12,6 @@ class LibraryPage extends StatelessWidget {
     return Container(
       height: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 16),
-      // decoration: BoxDecoration(
-      //   border: Border.all(
-      //     color: Colors.red,
-      //     width: 1
-      //   )
-      // ),
       child: SingleChildScrollView(
         child: Column(
           spacing: 28,
@@ -36,7 +30,7 @@ class LibraryPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionDevider(
-          text: 'Reading',
+          text: 'Lendo',
         ),
         Scroller(
           direction: Axis.horizontal,
@@ -54,11 +48,16 @@ class LibraryPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionDevider(
-          text: 'Comics',
+          text: 'Quadrinhos',
         ),
         Column(
           spacing: 12,
-          children: List.generate(5, (index) => Comic()),
+          children: List.generate(5, 
+            (index) => Comic(
+              title: 'Titulo',
+              subtitle: 'Edição 00',
+            )
+          )
         )
       ],
     );

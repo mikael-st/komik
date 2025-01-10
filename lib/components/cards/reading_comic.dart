@@ -41,7 +41,7 @@ class ReadingComic extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Title', style: KomikTypography.card_title),
+          Text('Titulo', style: KomikTypography.card_title),
           _subtitles()
         ],
       )
@@ -56,8 +56,8 @@ class ReadingComic extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Edition 00', style: KomikTypography.subtitles),
-          Text('00 / 00 pages', style: KomikTypography.subtitles)
+          Text('Edição 00', style: KomikTypography.subtitles),
+          Text('00 / 00 páginas', style: KomikTypography.subtitles)
         ],
       )
     );

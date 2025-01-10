@@ -9,7 +9,7 @@ class KomikTypography {
   );
 
   static TextStyle get card_title => TextStyle(
-    fontSize: 18,
+    fontSize: 16,
     color: Palette.white,
   );
 
