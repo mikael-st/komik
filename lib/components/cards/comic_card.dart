@@ -3,10 +3,10 @@ import 'package:komik/assets/typography.dart';
 import 'package:komik/components/buttons/options_btn.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
 
-class Comic extends StatelessWidget {
+class ComicCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  const Comic({
+  const ComicCard({
     super.key,
     required this.title,
     required this.subtitle

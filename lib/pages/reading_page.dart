@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:komik/components/cards/reading_comic.dart';
+import 'package:komik/components/cards/reading_comic_card.dart';
 
 class ReadingPage extends StatelessWidget {
   const ReadingPage({super.key});
@@ -13,7 +13,7 @@ class ReadingPage extends StatelessWidget {
         child: Column(
           spacing: 12,
           children: List.generate(8, 
-            (index) => ReadingComic()
+            (index) => ReadingComicCard()
           ),
         )
         )

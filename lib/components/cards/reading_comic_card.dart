@@ -4,8 +4,8 @@ import 'package:komik/assets/typography.dart';
 import 'package:komik/components/buttons/options_btn.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
 
-class ReadingComic extends StatelessWidget {
-  const ReadingComic({super.key});
+class ReadingComicCard extends StatelessWidget {
+  const ReadingComicCard({super.key});
 
   @override
   Widget build(BuildContext context) {

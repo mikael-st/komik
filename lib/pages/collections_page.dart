@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:komik/components/cards/comic.dart';
+import 'package:komik/components/cards/comic_card.dart';
 
 class CollectionsPage extends StatelessWidget {
   const CollectionsPage({super.key});
@@ -13,7 +13,7 @@ class CollectionsPage extends StatelessWidget {
         child: Column(
           spacing: 12,
           children: List.generate(8, 
-            (index) => Comic(
+            (index) => ComicCard(
               title: 'Titulo',
               subtitle: '00 - 00 edições',
             )
