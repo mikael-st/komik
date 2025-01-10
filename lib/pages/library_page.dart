@@ -36,9 +36,7 @@ class LibraryPage extends StatelessWidget {
           direction: Axis.horizontal,
           amount: 5,
           margin: EdgeInsets.symmetric(horizontal: 16),
-          child: ReadingComicCard(
-            width: 332,
-          ),
+          child: ReadingComicCard(),
         )
       ],
     );

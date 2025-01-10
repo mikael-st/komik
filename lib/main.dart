@@ -4,6 +4,7 @@ import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/components/tool-bars/tool_bar.dart';
 import 'package:komik/pages/collections_page.dart';
+import 'package:komik/pages/comics_page.dart';
 import 'package:komik/pages/library_page.dart';
 import 'package:komik/pages/reading_page.dart';
 
@@ -23,8 +24,9 @@ class _KomikAppState extends State<KomikApp> {
 
   Map<int, Widget> content = {
     0: LibraryPage(),
-    1: CollectionsPage(),
-    2: ReadingPage()
+    1: ComicsPage(),
+    2: ReadingPage(),
+    3: CollectionsPage()
   };
 
   @override
@@ -68,12 +70,21 @@ class _KomikAppState extends State<KomikApp> {
           destinations: [
             NavigationDestination(
               icon: HeroIcon(
-                HeroIcons.bookmarkSquare,
+                HeroIcons.home,
                 style: HeroIconStyle.solid,
                 size: 24,
                 color: Palette.white,
               ),
               label: 'Inicio',
+            ),
+            NavigationDestination(
+              icon: HeroIcon(
+                HeroIcons.bookmarkSquare,
+                style: HeroIconStyle.solid,
+                size: 24,
+                color: Palette.white,
+              ),
+              label: 'Quadrinhos',
             ),
             NavigationDestination(
               icon: HeroIcon(
@@ -95,7 +106,7 @@ class _KomikAppState extends State<KomikApp> {
           ],
           selectedIndex: index,
           backgroundColor: Palette.items,
-          indicatorColor: Palette.transparent,
+          indicatorColor: const Color.fromARGB(83, 228, 25, 59),
         )),
       );
   }

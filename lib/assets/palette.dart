@@ -11,4 +11,5 @@ class Palette {
   static const Color comic_icon = Color.fromARGB(255, 50, 46, 67);
   static const Color subtitles = Color.fromARGB(255, 106, 101, 134); 
   static const Color details = Color.fromARGB(255, 228, 25, 59);
+  static const Color navbar_indicator = Color.fromARGB(134, 228, 25, 59);
 }
