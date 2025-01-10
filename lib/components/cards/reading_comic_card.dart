@@ -5,12 +5,16 @@ import 'package:komik/components/buttons/options_btn.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
 
 class ReadingComicCard extends StatelessWidget {
-  const ReadingComicCard({super.key});
+  final double width;
+  const ReadingComicCard({
+    super.key,
+    required this.width
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 332,
+      width: width,
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
