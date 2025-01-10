@@ -8,17 +8,20 @@ class SectionDevider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(text, style: KomikTypography.label,),
-        Expanded (
-          child: Container(
-            margin: EdgeInsets.only(left: 10),
-            height: 2,
-            color: Palette.details,
-          ),
-        )
-      ],
+    return Padding(
+      padding: EdgeInsets.only(left: 16),
+      child: Row(
+        spacing: 10,
+        children: [
+          Text(text, style: KomikTypography.label,),
+          Expanded (
+            child: Container(
+              height: 2,
+              color: Palette.details,
+            ),
+          )
+        ],
+      )
     );
   }
 }
