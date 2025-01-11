@@ -7,6 +7,7 @@ import 'package:komik/pages/collections_page.dart';
 import 'package:komik/pages/comics_page.dart';
 import 'package:komik/pages/library_page.dart';
 import 'package:komik/pages/reading_page.dart';
+import 'package:komik/pages/search_page.dart';
 
 void main() {
   runApp(const KomikApp());
@@ -41,11 +42,19 @@ class _KomikAppState extends State<KomikApp> {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      home: Scaffold(
-        appBar: ToolBar(),
-        body: content[index],
-        bottomNavigationBar: _navBar(),
-      )
+      initialRoute: '/',
+      routes: {
+        '/': (context) => _app(),
+        '/search': (context) => SearchPage(),
+      },
+    );
+  }
+
+  Widget _app() {
+    return Scaffold(
+      appBar: ToolBar(),
+      body: content[index],
+      bottomNavigationBar: _navBar(),
     );
   }
 
@@ -65,7 +74,6 @@ class _KomikAppState extends State<KomikApp> {
           child: NavigationBar(
           onDestinationSelected: (value) {
             setState(() => index = value);
-            print(index);
           },
           destinations: [
             NavigationDestination(

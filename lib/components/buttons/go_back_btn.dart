@@ -9,6 +9,7 @@ class GoBackBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: (){
+        Navigator.popAndPushNamed(context, '/');
         print('Go Back');
       },
       style: IconButton.styleFrom(
