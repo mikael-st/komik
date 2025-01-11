@@ -3,7 +3,9 @@ import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/palette.dart';
 
 class GoBackBtn extends StatelessWidget {
-  const GoBackBtn({super.key});
+  const GoBackBtn({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/tool-bars/search_bar.dart';
 import 'package:komik/components/utils/checkboxes/check_mode.dart';
 import 'package:komik/service/states/search_filter_type/search_filter_type.dart';
@@ -24,13 +25,14 @@ class _SearchPageState extends State<SearchPage> {
         appBar: SearchToolBar(),
         body: Container(
         height: double.infinity,
-        margin: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+        margin: EdgeInsets.symmetric(vertical: 16),
         child: SingleChildScrollView(
           clipBehavior: Clip.none,
           child: Column(
             spacing: 20,
             children: [
-              _filter()
+              _filter(),
+              _results()
             ],
           )
         )
@@ -39,7 +41,9 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   Widget _filter(){
-    return Row(
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
       spacing: 12,
       children: [
         CheckMode(
@@ -60,6 +64,15 @@ class _SearchPageState extends State<SearchPage> {
           group: SearchFilterTypeState.mode.value,
           onChanged: _onChangeType,
         )
+      ],
+    ),
+    );
+  }
+
+  Widget _results(/* Widget card */) {
+    return Column(
+      children: [
+        SectionDevider(text: 'Resultado')
       ],
     );
   }

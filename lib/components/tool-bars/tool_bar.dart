@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:komik/assets/palette.dart';
-import 'package:komik/components/buttons/go_back_btn.dart';
 import 'package:komik/components/buttons/menu_btn.dart';
 import 'package:komik/components/buttons/search_btn.dart';
 
 class ToolBar extends StatelessWidget implements PreferredSizeWidget {
-  const ToolBar({super.key});
+  final Widget leading;
+  const ToolBar({
+    super.key,
+    required this.leading
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class ToolBar extends StatelessWidget implements PreferredSizeWidget {
         )
       ),
       backgroundColor: Palette.items,
-      leading: GoBackBtn(),
+      leading: leading,
       actions: [
         SearchBtn(),
         MenuBtn()

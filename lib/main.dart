@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heroicons/heroicons.dart';
+import 'package:komik/assets/icons/logo.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/components/tool-bars/tool_bar.dart';
 import 'package:komik/pages/collections_page.dart';
@@ -52,7 +53,9 @@ class _KomikAppState extends State<KomikApp> {
 
   Widget _app() {
     return Scaffold(
-      appBar: ToolBar(),
+      appBar: ToolBar(
+        leading: Logo(),
+      ),
       body: content[index],
       bottomNavigationBar: _navBar(),
     );
@@ -73,7 +76,10 @@ class _KomikAppState extends State<KomikApp> {
           ),
           child: NavigationBar(
           onDestinationSelected: (value) {
-            setState(() => index = value);
+            setState(() {
+                index = value;
+              }
+            );
           },
           destinations: [
             NavigationDestination(
