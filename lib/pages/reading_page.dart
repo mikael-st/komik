@@ -8,15 +8,18 @@ class ReadingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: double.infinity,
-      margin: EdgeInsets.symmetric(vertical: 16),
+      margin: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
       child: SingleChildScrollView(
+        clipBehavior: Clip.none,
         child: Column(
           spacing: 12,
           children: List.generate(8, 
-            (index) => ReadingComicCard()
+            (index) => ReadingComicCard(
+              width: double.infinity
+            )
           ),
         )
-        )
-      );
+      )
+    );
   }
 }

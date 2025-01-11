@@ -15,7 +15,6 @@ class ComicCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 16),
       height: 126,
       child: _content(),
     );

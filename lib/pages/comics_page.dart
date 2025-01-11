@@ -12,7 +12,7 @@ class ComicsPage extends StatelessWidget {
       child: SingleChildScrollView(
         clipBehavior: Clip.none,
         child: Column(
-          spacing: 16,
+          spacing: 12,
           children: List.generate(8, 
             (index) => ComicCard(
               title: 'Title',

@@ -9,6 +9,7 @@ class CollectionsPage extends StatelessWidget {
     return Container(
       height: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 16),
+      
       child: SingleChildScrollView(
         child: Column(
           spacing: 12,

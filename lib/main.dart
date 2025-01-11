@@ -25,8 +25,8 @@ class _KomikAppState extends State<KomikApp> {
   Map<int, Widget> content = {
     0: LibraryPage(),
     1: ComicsPage(),
-    2: ReadingPage(),
-    3: CollectionsPage()
+    2: CollectionsPage(),
+    3: ReadingPage()
   };
 
   @override
