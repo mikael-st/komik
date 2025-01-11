@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/palette.dart';
-import 'package:komik/assets/typography.dart';
 import 'package:komik/components/buttons/go_back_btn.dart';
 import 'package:komik/components/buttons/menu_btn.dart';
-import 'package:komik/components/buttons/search_btn.dart';
 
 class SearchToolBar extends StatelessWidget implements PreferredSizeWidget {
   const SearchToolBar({super.key});
