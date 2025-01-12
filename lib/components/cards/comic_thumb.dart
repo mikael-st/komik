@@ -10,7 +10,7 @@ class ComicThumb extends StatelessWidget {
     return Container(
       color: Palette.card,
       width: 100,
-      height: double.infinity,
+      height: 126,
       child: HeroIcon(
         HeroIcons.bookOpen,
         style: HeroIconStyle.solid,

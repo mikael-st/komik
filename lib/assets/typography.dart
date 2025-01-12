@@ -7,6 +7,17 @@ class KomikTypography {
     color: Palette.white,
   );
 
+  static TextStyle get see_more => TextStyle(
+    fontSize: 14,
+    color: Palette.details,
+  );
+
+  static TextStyle get title => TextStyle(
+    fontSize: 18,
+    color: Palette.white,
+    fontWeight: FontWeight.w900
+  );
+
   static TextStyle get label => TextStyle(
     fontSize: 12,
     color: Palette.white,

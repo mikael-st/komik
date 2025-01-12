@@ -6,17 +6,25 @@ import 'package:komik/components/cards/comic_thumb.dart';
 class ComicCard extends StatelessWidget {
   final String title;
   final String subtitle;
+  final Function() callback;
   const ComicCard({
     super.key,
     required this.title,
-    required this.subtitle
+    required this.subtitle,
+    required this.callback
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 126,
-      child: _content(),
+    return GestureDetector(
+        onTap: () {
+          callback();
+          print('OPEN');
+        },
+        child: Container(
+          height: 126,
+          child: _content(),
+      ),
     );
   }
 

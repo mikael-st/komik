@@ -4,6 +4,7 @@ import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/icons/logo.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/components/tool-bars/tool_bar.dart';
+import 'package:komik/pages/collection_info.dart';
 import 'package:komik/pages/collections_page.dart';
 import 'package:komik/pages/comics_page.dart';
 import 'package:komik/pages/library_page.dart';
@@ -43,10 +44,11 @@ class _KomikAppState extends State<KomikApp> {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/collection',
       routes: {
         '/': (context) => _app(),
         '/search': (context) => SearchPage(),
+        '/collection': (context) => CollectionInfoPage(),
       },
     );
   }
