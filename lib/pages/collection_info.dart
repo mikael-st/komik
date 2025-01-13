@@ -1,15 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:heroicons/heroicons.dart';
+import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
 import 'package:komik/components/buttons/go_back_btn.dart';
-import 'package:komik/components/buttons/see_more.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
+import 'package:komik/components/cards/comic_tile.dart';
 import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/tool-bars/tool_bar.dart';
 
-class CollectionInfoPage extends StatelessWidget {
-
-  const CollectionInfoPage({super.key});
+class CollectionInfoPage extends StatefulWidget {
   
+  const CollectionInfoPage({super.key});
+
+  @override
+  State<CollectionInfoPage> createState() => _CollectionInfoPageState();
+}
+
+class _CollectionInfoPageState extends State<CollectionInfoPage> {
+  late Widget actualDescription;
+
+  @override
+  void initState() {
+    actualDescription = _shortDescription();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,9 +32,6 @@ class CollectionInfoPage extends StatelessWidget {
         ),
         body: Container(
           height: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.green, width: 1)
-          ),
           margin: EdgeInsets.symmetric(vertical: 16),
           child: SingleChildScrollView(
             clipBehavior: Clip.none,
@@ -28,7 +39,10 @@ class CollectionInfoPage extends StatelessWidget {
               spacing: 20,
               children: [
                 _infos(),
-                _comics()
+                SectionDevider(text: 'Edições'),
+                _comics(
+                  ComicTile()
+                )
               ],
             )
           )
@@ -39,41 +53,21 @@ class CollectionInfoPage extends StatelessWidget {
   Widget _infos(){
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-          border: Border.all(color: Colors.blue, width: 1)
-        ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 12,
         children: [
           ComicThumb(),
-          _details()
+          _details(
+            actualDescription
+          )
         ],
       ),
     );
   }
 
-  Widget _details(){
+  Widget _details(Widget descriptionCard){
     final title = Text('Titulo', style: KomikTypography.title,);
-    final description = Text(
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
-      overflow: TextOverflow.ellipsis,
-      maxLines: 7,
-      textAlign: TextAlign.justify,
-      style: KomikTypography.base,
-    );
-
-    final descriptionCard =Container(
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.red, width: 1)
-        ),
-        child: Column(
-          children: [
-            description,
-            SeeMoreBtn()
-          ],
-        )
-      );
 
     return Expanded(
       child: Column(
@@ -88,11 +82,74 @@ class CollectionInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _comics(/* Widget card */) {
+  Widget _shortDescription() {
+    final description = Text(
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      overflow: TextOverflow.ellipsis,
+      maxLines: 7,
+      textAlign: TextAlign.justify,
+      style: KomikTypography.base,
+    );
+
     return Column(
       children: [
-        SectionDevider(text: 'Edições')
+        description,
+        _seeMoreBtn(
+          icon: HeroIcons.chevronDown,
+          action: () => {
+            setState(() => actualDescription = _fullDescription())
+          }
+        )
       ],
+    );
+  }
+
+  Widget _fullDescription() {
+    final description = Text(
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+      textAlign: TextAlign.justify,
+      style: KomikTypography.base,
+    );
+
+    return Column(
+      children: [
+        description,
+        _seeMoreBtn(
+          icon: HeroIcons.chevronUp,
+          action: () => {
+            setState(() => actualDescription = _shortDescription())
+          }
+        )
+      ],
+    );
+  }
+
+  Widget _comics(Widget card) {
+    return Column(
+      spacing: 12,
+      children: List.generate(5, (index) => card)
+    );
+  }
+
+  Widget _seeMoreBtn({
+    required HeroIcons icon,
+    required Function() action
+  }) {
+    return TextButton.icon(
+      onPressed: (){
+        action();
+      },
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.all(0),
+        minimumSize: Size(double.infinity, 14)
+      ),
+      iconAlignment: IconAlignment.end,
+      icon: HeroIcon(
+        icon,
+        color: Palette.details,
+        style: HeroIconStyle.micro,
+      ),
+      label: Text('Ver mais ', style: KomikTypography.see_more),
     );
   }
 }
