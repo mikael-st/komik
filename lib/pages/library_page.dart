@@ -14,17 +14,17 @@ class LibraryPage extends StatelessWidget {
       height: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 16),
       alignment: Alignment.center,
-      child: _content()
+      child: _content(context)
     );
   }
 
-  Widget _content() {
+  Widget _content(BuildContext context) {
     return SingleChildScrollView(
       child: Column(
         spacing: 28,
         children: [
           _reading(),
-          _comics()
+          _comics(context)
         ],
       )
     );
@@ -48,7 +48,7 @@ class LibraryPage extends StatelessWidget {
     );
   }
 
-  Widget _comics() {
+  Widget _comics(BuildContext context) {
     return Column(
       spacing: 12,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -56,13 +56,16 @@ class LibraryPage extends StatelessWidget {
         SectionDevider(
           text: 'Quadrinhos',
         ),
-        Column(
-          spacing: 12,
-          children: List.generate(5, 
-            (index) => ComicCard(
-              title: 'Titulo',
-              subtitle: 'Edição 00',
-              callback: () => print('Open Comic Reader')/* Navigator.pushNamed(context, 'collection-info') */,
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            spacing: 12,
+            children: List.generate(5, 
+              (index) => ComicCard(
+                title: 'Titulo',
+                subtitle: 'Edição 00',
+                callback: () => Navigator.pushNamed(context, '/reader'),
+              )
             )
           )
         )

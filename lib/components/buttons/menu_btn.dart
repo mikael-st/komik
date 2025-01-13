@@ -9,6 +9,7 @@ class MenuBtn extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: (){
+        Navigator.pushNamed(context, '/settings');
         print('Open Bottom Menu');
       },
       style: IconButton.styleFrom(
@@ -17,7 +18,8 @@ class MenuBtn extends StatelessWidget {
         alignment: Alignment.centerLeft
       ),
       icon: HeroIcon(
-        HeroIcons.equals,
+        HeroIcons.adjustmentsHorizontal,
+        style: HeroIconStyle.solid,
         color: Palette.white,
         size: 24,
       ),

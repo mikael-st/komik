@@ -29,7 +29,9 @@ class ReadingComicCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 12,
       children: [
-        ComicThumb(),
+        ComicThumb(
+          height: double.infinity,
+        ),
         _title(),
         OptionsBtn()
       ],
