@@ -8,19 +8,22 @@ class ReadingComicCard extends StatelessWidget {
   final double width;
   const ReadingComicCard({
     super.key,
-    this.width = 332
+    this.width = 332,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: Palette.items,
+    return GestureDetector(
+      onTap: () => Navigator.pushNamed(context, '/reader'),
+      child: Container(
+        width: width,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: Palette.items,
+        ),
+        height: 145,
+        child: _content(),
       ),
-      height: 145,
-      child: _content(),
     );
   }
 

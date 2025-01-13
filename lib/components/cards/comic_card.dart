@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
 import 'package:komik/components/buttons/options_btn.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
@@ -19,9 +20,9 @@ class ComicCard extends StatelessWidget {
     return GestureDetector(
         onTap: () {
           callback();
-          print('OPEN');
         },
         child: Container(
+          color: Palette.transparent,
           height: 126,
           child: _content(),
       ),
