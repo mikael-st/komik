@@ -7,7 +7,7 @@ class KomikTypography {
     color: Palette.white,
   );
 
-  static TextStyle get see_more => TextStyle(
+  static TextStyle get action_button => TextStyle(
     fontSize: 14,
     color: Palette.details,
   );

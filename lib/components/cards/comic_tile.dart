@@ -12,7 +12,7 @@ class ComicTile extends StatelessWidget {
         spacing: 12,
         children: [
           ComicThumb(),
-          Text('#00', style: KomikTypography.see_more)
+          Text('#00', style: KomikTypography.action_button)
         ],
       ),
     );

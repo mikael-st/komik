@@ -21,6 +21,7 @@ class _CollectionInfoPageState extends State<CollectionInfoPage> {
 
   @override
   void initState() {
+    super.initState();
     actualDescription = _shortDescription();
   }
 
@@ -149,7 +150,7 @@ class _CollectionInfoPageState extends State<CollectionInfoPage> {
         color: Palette.details,
         style: HeroIconStyle.micro,
       ),
-      label: Text('Ver mais ', style: KomikTypography.see_more),
+      label: Text('Ver mais ', style: KomikTypography.action_button),
     );
   }
 }

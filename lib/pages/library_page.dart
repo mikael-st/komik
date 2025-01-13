@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:komik/assets/typography.dart';
 import 'package:komik/components/cards/comic_card.dart';
 import 'package:komik/components/cards/reading_comic_card.dart';
 import 'package:komik/components/devider/section_devider.dart';
@@ -12,15 +13,20 @@ class LibraryPage extends StatelessWidget {
     return Container(
       height: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 16),
-      child: SingleChildScrollView(
-        child: Column(
-          spacing: 28,
-          children: [
-            _reading(),
-            _comics()
-          ],
-        )
-      ),
+      alignment: Alignment.center,
+      child: _notFoundComics()
+    );
+  }
+
+  Widget _content() {
+    return SingleChildScrollView(
+      child: Column(
+        spacing: 28,
+        children: [
+          _reading(),
+          _comics()
+        ],
+      )
     );
   }
 
@@ -59,6 +65,19 @@ class LibraryPage extends StatelessWidget {
               callback: () => print('Open Comic Reader')/* Navigator.pushReplacementNamed(context, 'collection-info') */,
             )
           )
+        )
+      ],
+    );
+  }
+
+  Widget _notFoundComics() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('Nenhum quadrinho encontrado', style: KomikTypography.base),
+        TextButton(
+          onPressed: () => print('Go to Files Selector'),
+          child: Text('Adicionar', style: KomikTypography.action_button)
         )
       ],
     );

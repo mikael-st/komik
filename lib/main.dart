@@ -44,7 +44,7 @@ class _KomikAppState extends State<KomikApp> {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      initialRoute: '/collection',
+      initialRoute: '/',
       routes: {
         '/': (context) => _app(),
         '/search': (context) => SearchPage(),
