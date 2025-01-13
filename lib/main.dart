@@ -11,6 +11,7 @@ import 'package:komik/pages/library_page.dart';
 import 'package:komik/pages/reader_page.dart';
 import 'package:komik/pages/reading_page.dart';
 import 'package:komik/pages/search_page.dart';
+import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
 
 void main() {
@@ -46,13 +47,14 @@ class _KomikAppState extends State<KomikApp> {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      initialRoute: '/settings',
+      initialRoute: '/local-files',
       routes: {
         '/': (context) => _app(),
         '/search': (context) => SearchPage(),
         '/collection': (context) => CollectionInfoPage(),
         '/reader': (context) => ReaderPage(),
-        '/settings': (context) => Settings()
+        '/settings': (context) => Settings(),
+        '/local-files': (context) => LocalFilesPage()
       },
     );
   }
