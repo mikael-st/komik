@@ -14,7 +14,7 @@ class LibraryPage extends StatelessWidget {
       height: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 16),
       alignment: Alignment.center,
-      child: _notFoundComics()
+      child: _content()
     );
   }
 
@@ -62,7 +62,7 @@ class LibraryPage extends StatelessWidget {
             (index) => ComicCard(
               title: 'Titulo',
               subtitle: 'Edição 00',
-              callback: () => print('Open Comic Reader')/* Navigator.pushReplacementNamed(context, 'collection-info') */,
+              callback: () => print('Open Comic Reader')/* Navigator.pushNamed(context, 'collection-info') */,
             )
           )
         )

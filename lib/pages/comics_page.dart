@@ -17,7 +17,7 @@ class ComicsPage extends StatelessWidget {
             (index) => ComicCard(
               title: 'Title',
               subtitle: 'Edição 00',
-              callback: () => print('Open Comic Reader')/* Navigator.pushReplacementNamed(context, 'collection-info') */,
+              callback: () => print('Open Comic Reader')/* Navigator.pushNamed(context, 'collection-info') */,
             )
           ),
         )

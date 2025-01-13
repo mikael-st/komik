@@ -17,7 +17,7 @@ class CollectionsPage extends StatelessWidget {
             (index) => ComicCard(
               title: 'Titulo',
               subtitle: '00 - 00 edições',
-              callback: () => Navigator.pushReplacementNamed(context, '/collection'),
+              callback: () => Navigator.pushNamed(context, '/collection'),
             )
           ),
         )
