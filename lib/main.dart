@@ -14,6 +14,7 @@ import 'package:komik/pages/reading_page.dart';
 import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
+import 'package:komik/service/utils/permissions_manager.dart';
 
 void main() {
   runApp(const KomikApp());
@@ -28,13 +29,20 @@ class KomikApp extends StatefulWidget {
 
 class _KomikAppState extends State<KomikApp> {
   int index = 0;
-
   Map<int, Widget> content = {
     0: LibraryPage(),
     1: ComicsPage(),
     2: CollectionsPage(),
     3: ReadingPage()
   };
+
+  PermissionsManager permissionsManager = PermissionsManager();
+
+  @override
+  void initState() {
+    super.initState();
+    // await permissionsManager.checkPermission();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +56,7 @@ class _KomikAppState extends State<KomikApp> {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      initialRoute: '/edit-comic',
+      initialRoute: '/',
       routes: {
         '/': (context) => _app(),
         '/search': (context) => SearchPage(),
