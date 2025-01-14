@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/palette.dart';
-import 'package:komik/components/modals/options_modal.dart';
 
 class CloseBtn extends StatelessWidget {
   final Function() action;

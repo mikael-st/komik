@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
-import 'package:komik/service/states/search_filter_type/search_filter_type.dart';
+import 'package:komik/service/utils/states/search_filter_type.dart';
 
 class CheckMode extends StatelessWidget {
   final SearchFilterType type;

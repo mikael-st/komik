@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/tool-bars/search_bar.dart';
 import 'package:komik/components/utils/checkboxes/check_mode.dart';
-import 'package:komik/service/states/search_filter_type/search_filter_type.dart';
+import 'package:komik/service/utils/states/search_filter_type.dart';
 
 class SearchPage extends StatefulWidget {
 
