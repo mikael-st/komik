@@ -75,9 +75,7 @@ class _SettingsState extends State<Settings> {
               style: HeroIconStyle.solid,
               size: 26,
             ),
-            action: () {
-              print('Open Local Files Page');
-            },
+            action: () => Navigator.pushNamed(context, '/local-files'),
           ),
           _suboption(
             title: 'Busca automática',

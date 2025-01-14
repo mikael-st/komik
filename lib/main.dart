@@ -7,6 +7,7 @@ import 'package:komik/components/tool-bars/tool_bar.dart';
 import 'package:komik/pages/collection_info.dart';
 import 'package:komik/pages/collections_page.dart';
 import 'package:komik/pages/comics_page.dart';
+import 'package:komik/pages/edit_comic_infos.dart';
 import 'package:komik/pages/library_page.dart';
 import 'package:komik/pages/reader_page.dart';
 import 'package:komik/pages/reading_page.dart';
@@ -47,14 +48,15 @@ class _KomikAppState extends State<KomikApp> {
         fontFamily: 'Poppins',
         useMaterial3: true,
       ),
-      initialRoute: '/',
+      initialRoute: '/edit-comic',
       routes: {
         '/': (context) => _app(),
         '/search': (context) => SearchPage(),
         '/collection': (context) => CollectionInfoPage(),
         '/reader': (context) => ReaderPage(),
         '/settings': (context) => Settings(),
-        '/local-files': (context) => LocalFilesPage()
+        '/local-files': (context) => LocalFilesPage(),
+        '/edit-comic': (context) => EditComicInfos()
       },
     );
   }

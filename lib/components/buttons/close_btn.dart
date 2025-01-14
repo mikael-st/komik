@@ -3,27 +3,24 @@ import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/components/modals/options_modal.dart';
 
-class OptionsBtn extends StatelessWidget {
-  const OptionsBtn({super.key});
+class CloseBtn extends StatelessWidget {
+  final Function() action;
+  const CloseBtn({
+    super.key,
+    required this.action
+  });
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: (){
-        showModalBottomSheet(
-          context: context,
-          builder: (BuildContext context) {
-            return OptionsModal();
-          }
-        );
-      },
+      onPressed: action,
       style: IconButton.styleFrom(
         shape: RoundedRectangleBorder(),
         padding: EdgeInsets.all(16),
         alignment: Alignment.centerLeft,
       ),
       icon: HeroIcon(
-        HeroIcons.ellipsisVertical,
+        HeroIcons.xMark,
         color: Palette.white,
         size: 24,
       ),
