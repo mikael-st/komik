@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heroicons/heroicons.dart';
@@ -14,6 +16,7 @@ import 'package:komik/pages/reading_page.dart';
 import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
+import 'package:komik/service/utils/file_manager.dart';
 import 'package:komik/service/utils/permissions_manager.dart';
 
 void main() {
@@ -36,12 +39,15 @@ class _KomikAppState extends State<KomikApp> {
     3: ReadingPage()
   };
 
-  PermissionsManager permissionsManager = PermissionsManager();
+  final PermissionsManager permissionManager = PermissionsManager();
+  late FileManager fileManager = FileManager(permissionManager: permissionManager);
+
+  final List<File> comics = [];
 
   @override
   void initState() {
     super.initState();
-    // await permissionsManager.checkPermission();
+    permissionManager.storage();
   }
 
   @override
@@ -74,8 +80,37 @@ class _KomikAppState extends State<KomikApp> {
       appBar: ToolBar(
         leading: Logo(),
       ),
-      body: content[index],
+      body: _content(),
       bottomNavigationBar: _navBar(),
+    );
+  }
+
+  Widget _content() {
+    return FutureBuilder(
+      future: fileManager.getCBZ(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return _loading();
+        } else if (snapshot.hasData) {
+          return Container(
+            child: ListView(
+              children: snapshot.data!.map(
+                (comic) => Text(comic.path)
+              ).toList(),
+            ),
+          );
+        } else {
+          return Text('nada aqui');
+        }
+      }
+    );
+  }
+
+  Widget _loading() {
+    return Center(
+      child: CircularProgressIndicator(
+        color: Palette.details,
+      ),
     );
   }
 
@@ -141,5 +176,15 @@ class _KomikAppState extends State<KomikApp> {
           indicatorColor: const Color.fromARGB(83, 228, 25, 59),
         )),
       );
+  }
+
+  void setComics(AsyncSnapshot<List<File>> snapshot) {
+    if (snapshot.hasData) {
+      setState(() {
+        snapshot.data!.map(
+          (file) => comics.add(file)
+        );
+      });
+    }
   }
 }

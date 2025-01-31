@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
+import 'package:komik/service/utils/enums/comic_type_enum.dart';
 
 class SelectTypeDropdown extends StatefulWidget {
   const SelectTypeDropdown({
@@ -12,11 +13,11 @@ class SelectTypeDropdown extends StatefulWidget {
 }
 
 class _SelectTypeDropdownState extends State<SelectTypeDropdown> {
-  ComicType selected = ComicType.edition;
+  ComicTypeEnum selected = ComicTypeEnum.edition;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 118,
       child: Column(
         spacing: 12,
@@ -34,11 +35,11 @@ class _SelectTypeDropdownState extends State<SelectTypeDropdown> {
       style: KomikTypography.base,
       items: [
         DropdownMenuItem(
-          value: ComicType.edition,
+          value: ComicTypeEnum.edition,
           child:Text('Edição')
         ),
         DropdownMenuItem(
-          value: ComicType.book,
+          value: ComicTypeEnum.book,
           child:Text('Livro')
         )
       ],
@@ -54,9 +55,4 @@ class _SelectTypeDropdownState extends State<SelectTypeDropdown> {
       onChanged: (value){}
     );
   }
-}
-
-enum ComicType {
-  edition,
-  book
 }

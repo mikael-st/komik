@@ -94,7 +94,7 @@ class _SettingsState extends State<Settings> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Container(
+          SizedBox(
             width: 274,
             child: Column(
               spacing: 8,
@@ -111,9 +111,9 @@ class _SettingsState extends State<Settings> {
           ),
           CupertinoSwitch(
             value: userSettings['automatic-search'],
-            activeColor: Palette.details,
+            activeTrackColor: Palette.details,
             thumbColor: Palette.white,
-            trackColor: Palette.items,
+            inactiveTrackColor: Palette.items,
             onChanged: (bool value) {
               setState(() {
                 userSettings['automatic-search'] = value;

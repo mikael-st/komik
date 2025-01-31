@@ -3,7 +3,7 @@ import 'package:komik/assets/palette.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionsManager {
-  Future<bool> checkPermission() async {
+  Future<bool> storage() async {
     try {
       if (await Permission.storage.request().isGranted) {
         return true;
@@ -11,10 +11,10 @@ class PermissionsManager {
         Get.snackbar('Permissão negada',
           'Por favor, aceite a permissão para acessar asmúsicas',
           snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Palette.details,
+          backgroundColor: Palette.items,
           colorText: Palette.white
         );
-        checkPermission();
+        storage();
         return false;
       }
     } catch (err) {

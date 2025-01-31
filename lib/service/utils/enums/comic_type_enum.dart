@@ -1,0 +1,4 @@
+enum ComicTypeEnum {
+  edition,
+  book
+}

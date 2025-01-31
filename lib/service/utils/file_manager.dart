@@ -1,55 +1,47 @@
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:archive/archive_io.dart';
 import 'package:komik/service/utils/permissions_manager.dart';
-import 'package:path_provider/path_provider.dart';
 
 class FileManager {
   final String _path = '/storage/emulated/0/Comics';
-  final PermissionsManager _permissionsManager;
+  final PermissionsManager _permissionManager;
 
   const FileManager({
-    required PermissionsManager permissionsManager
-  }) : _permissionsManager = permissionsManager;
+    required PermissionsManager permissionManager
+  }) : _permissionManager = permissionManager;
 
   Future<List<FileSystemEntity>> _getFiles() async {
-    if (await _permissionsManager.checkPermission()) {
+    if (await _permissionManager.storage()) {
       try {
         final directory = Directory(_path);
-
+        print('pegando arquivos');
         return await directory.list().toList();
       } catch (err) {
         throw Exception(err);
       }
     } else {
-      await _permissionsManager.checkPermission();
+      print('Permissão negada');
       return [];
     }
   }
 
-  Future<List<FileSystemEntity>> getCBZ() async {
+  Future<List<File>> getCBZ() async {
     final comics = await _getFiles();
     
-    return comics.where(
-      (file) => file is File && file.path.endsWith('.cbr')).toList();
+    return comics
+    .where((file) => file is File && file.path.endsWith('.cbz'))
+    .map((f) => File(f.path))
+    .toList();
   }
 
-  Future<List<FileSystemEntity>> getCBR() async {
+  renameCBR() async {
     final comics = await _getFiles();
     
-    return comics.where(
-      (file) => file is File && file.path.endsWith('.cbr')).toList();
+    comics.where((file) => file is File && file.path.endsWith('.cbr')).toList();
+  
+    for (final comic in comics) {
+      await comic.rename(comic.path.replaceRange(comic.path.length-1, comic.path.length, 'z'));
+    }
   }
 
-  Future<List<String>> _extractImages(File file) async {
-    final tempDir = await getTemporaryDirectory();
-    final path = tempDir.path;
-
-    extractFileToDisk(file.path, path);
-
-    final images = await tempDir.list();
-    
-    return images.map((file) => file.path).toList();
-  }
 }
