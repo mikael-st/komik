@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:archive/archive_io.dart';
 import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/file_manager.dart';
 import 'package:komik/service/utils/interfaces/file_decorder.dart';

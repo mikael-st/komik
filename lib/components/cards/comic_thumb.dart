@@ -19,12 +19,12 @@ class ComicThumb extends StatelessWidget {
     return Container(
       width: 100,
       height: height,
-      decoration: thumb != MemoryImage(Uint8List(0))
+      decoration: thumb.bytes.isNotEmpty
           ? BoxDecoration(
             image: DecorationImage(image: thumb, fit: BoxFit.cover)
           )
           : BoxDecoration(color: Palette.card),
-      child: thumb != MemoryImage(Uint8List(0))
+      child: thumb.bytes.isNotEmpty
         ? null
         : HeroIcon(
           HeroIcons.bookOpen,
