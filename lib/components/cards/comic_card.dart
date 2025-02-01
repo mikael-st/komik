@@ -10,6 +10,7 @@ class ComicCard extends StatelessWidget {
   final String    title;
   final String    subtitle;
   final Uint8List thumb;
+  
   final Function() callback;
   const ComicCard({
     super.key,

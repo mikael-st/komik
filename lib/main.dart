@@ -15,6 +15,7 @@ import 'package:komik/pages/reading_page.dart';
 import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
+import 'package:komik/service/database/models/comic.dart';
 import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/cbz_decoder.dart';
 import 'package:komik/service/utils/fetch_comics.dart';
@@ -39,7 +40,7 @@ class _KomikAppState extends State<KomikApp> {
     decoder: CBZDecoder(decoder: ZipDecoder())
   );
 
-  late List<Comic> comics;
+  late List<Comic> comics = [];
 
   bool hasBeenInitialize = false;
 
@@ -80,7 +81,7 @@ class _KomikAppState extends State<KomikApp> {
         '/': (context) => _app(),
         '/search': (context) => SearchPage(),
         '/collection': (context) => CollectionInfoPage(),
-        '/reader': (context) => ReaderPage(),
+        '/reader': (context) => ReaderPage(fetchPages: fetchComics.fetchPages),
         '/settings': (context) => Settings(),
         '/local-files': (context) => LocalFilesPage(),
         '/edit-comic': (context) => EditComicInfos()

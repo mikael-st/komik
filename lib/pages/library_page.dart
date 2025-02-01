@@ -71,7 +71,7 @@ class LibraryPage extends StatelessWidget {
                 title: comic.title,
                 subtitle: 'Edição ${comic.edition}',
                 thumb: comic.thumb,
-                callback: () => Navigator.pushNamed(context, '/reader'),
+                callback: () => Navigator.pushNamed(context, '/reader', arguments: comic.path),
               )
             ).toList()
           )
