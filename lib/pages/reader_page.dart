@@ -5,6 +5,7 @@ import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
 import 'package:komik/components/tool-bars/reader_tool_bar.dart';
+import 'package:komik/service/dto/comic_reader_infos.dart';
 
 class ReaderPage extends StatefulWidget {
   final Function(String path) fetchPages;
@@ -19,9 +20,10 @@ class ReaderPage extends StatefulWidget {
 }
 
 class _ReaderPageState extends State<ReaderPage> {
-  late List<Uint8List> pages;
+  late List<MemoryImage> pages;
+  late ComicReaderInfos infos;
   int actualPageIndex = 0;
-  Uint8List actualPage = Uint8List(0);
+  MemoryImage actualPage = MemoryImage(Uint8List(0));
 
   @override
   void initState() {
@@ -32,8 +34,9 @@ class _ReaderPageState extends State<ReaderPage> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    infos = ModalRoute.of(context)?.settings.arguments as ComicReaderInfos;
     pages = widget.fetchPages(
-      ModalRoute.of(context)?.settings.arguments as String
+      infos.path
     );
     actualPage = pages[actualPageIndex];
   }
@@ -41,15 +44,21 @@ class _ReaderPageState extends State<ReaderPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: ReaderToolBar(),
+      appBar: ReaderToolBar(
+        title: infos.title,
+      ),
       body: _content(),
     );
   }
 
   @override
   void dispose() {
-    super.dispose();
+    pages.clear();
     pages = [];
+    actualPage = MemoryImage(Uint8List(0));
+    actualPageIndex = 0;
+
+    super.dispose();
   }
 
   Widget _content() {
@@ -74,30 +83,30 @@ class _ReaderPageState extends State<ReaderPage> {
         
         if (touchX < width/2) {
           setState(() {
-            actualPageIndex = actualPageIndex - 1;
-            actualPage = pages[actualPageIndex];
+            actualPageIndex--;
+            actualPage = isNotFirstPage && isNotLastPage ? pages[actualPageIndex] : pages[actualPageIndex];
           });
         } else {
           setState(() {
-            actualPageIndex = actualPageIndex + 1;
-            actualPage = pages[actualPageIndex];
+            actualPageIndex++;
+            actualPage = isNotFirstPage && isNotLastPage ? pages[actualPageIndex] : pages[actualPageIndex];
           });
         }
       },
       child: Container(
         height: 552,
         width: width,
-        decoration: actualPage.isNotEmpty
+        decoration: actualPage.bytes.isNotEmpty
             ? BoxDecoration(
               image: DecorationImage(
-                image: MemoryImage(actualPage),
+                image: actualPage,
                 fit: BoxFit.contain
               )
             )
             : BoxDecoration(
               color: Palette.card,
             ),
-        child: actualPage.isNotEmpty
+        child: actualPage.bytes.isNotEmpty
             ? null 
             : HeroIcon(
                 HeroIcons.bookOpen,
@@ -110,6 +119,10 @@ class _ReaderPageState extends State<ReaderPage> {
   }
 
   Widget _pages() {
-    return Text('00 de 00 páginas', style: KomikTypography.action_button);
+    return Text('$actualPageIndex de ${pages.length} páginas', style: KomikTypography.action_button);
   }
+
+  bool get isNotFirstPage => actualPageIndex > 0;
+
+  bool get isNotLastPage => actualPageIndex < pages.length-1;
 }

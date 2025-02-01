@@ -40,7 +40,6 @@ class FileManager {
     comics = comics.where((file) => file is File && file.path.endsWith('.cbr')).toList();
 
     if (comics.isNotEmpty) {
-      print('chamou isso aqui');
       for (final comic in comics) {
         await comic.rename(comic.path.replaceRange(comic.path.length-1, comic.path.length, 'z'));
       }

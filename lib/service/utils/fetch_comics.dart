@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
+import 'package:flutter/widgets.dart';
 import 'package:komik/service/database/models/comic.dart';
 import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/file_manager.dart';
@@ -76,13 +77,13 @@ class FetchComics {
     }
   }
 
-  List<Uint8List> fetchPages(String path) {
+  List<MemoryImage> fetchPages(String path) {
     final archives = _decoder
                       .decode(File(path))
                       .files;
     
     return archives.where((archive) => isImage(archive.name))
-                   .map((archive) => archive.content)
+                   .map((archive) => MemoryImage(archive.content))
                    .toList();
   }
 }

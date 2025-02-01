@@ -4,6 +4,7 @@ import 'package:komik/components/cards/comic_card.dart';
 import 'package:komik/components/cards/reading_comic_card.dart';
 import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/utils/scroller/scroller.dart';
+import 'package:komik/service/dto/comic_reader_infos.dart';
 import 'package:komik/service/models/comic.dart';
 
 class LibraryPage extends StatelessWidget {
@@ -71,7 +72,11 @@ class LibraryPage extends StatelessWidget {
                 title: comic.title,
                 subtitle: 'Edição ${comic.edition}',
                 thumb: comic.thumb,
-                callback: () => Navigator.pushNamed(context, '/reader', arguments: comic.path),
+                callback: () => Navigator.pushNamed(
+                                  context,
+                                  '/reader',
+                                  arguments: comic as ComicReaderInfos
+                                ),
               )
             ).toList()
           )

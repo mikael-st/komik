@@ -56,6 +56,12 @@ class _KomikAppState extends State<KomikApp> {
   void initState() {
     super.initState();
     permissionManager.storage();
+    comics = [];
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     fetchComics.fetch().then(
       (files) => setState(() {
         comics = files;

@@ -1,13 +1,16 @@
 import 'dart:typed_data';
 
+import 'package:komik/service/dto/comic_reader_infos.dart';
 import 'package:komik/service/utils/enums/comic_type_enum.dart';
 
-class Comic {
+class Comic implements ComicReaderInfos{
+  @override
   late String        title;
   late String        subtitle;
   late String        edition;
   late ComicTypeEnum type;
   late Uint8List     thumb;
+  @override
   late String        path;
 
   Comic({
