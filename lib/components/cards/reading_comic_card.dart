@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
@@ -34,6 +36,7 @@ class ReadingComicCard extends StatelessWidget {
       children: [
         ComicThumb(
           height: double.infinity,
+          thumb: MemoryImage(Uint8List(0)),
         ),
         _title(),
         OptionsBtn()

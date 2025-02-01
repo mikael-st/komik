@@ -4,9 +4,15 @@ import 'package:komik/components/cards/comic_card.dart';
 import 'package:komik/components/cards/reading_comic_card.dart';
 import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/utils/scroller/scroller.dart';
+import 'package:komik/service/models/comic.dart';
 
 class LibraryPage extends StatelessWidget {
-  const LibraryPage({super.key});
+  final List<Comic> comics;
+
+  const LibraryPage({
+    super.key,
+    required this.comics
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +66,14 @@ class LibraryPage extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: Column(
             spacing: 12,
-            children: List.generate(5, 
-              (index) => ComicCard(
-                title: 'Titulo',
-                subtitle: 'Edição 00',
+            children: comics.map( 
+              (comic) => ComicCard(
+                title: comic.title,
+                subtitle: 'Edição ${comic.edition}',
+                thumb: comic.thumb,
                 callback: () => Navigator.pushNamed(context, '/reader'),
               )
-            )
+            ).toList()
           )
         )
       ],

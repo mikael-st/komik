@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
@@ -5,13 +7,15 @@ import 'package:komik/components/buttons/options_btn.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
 
 class ComicCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
+  final String    title;
+  final String    subtitle;
+  final Uint8List thumb;
   final Function() callback;
   const ComicCard({
     super.key,
     required this.title,
     required this.subtitle,
+    required this.thumb,
     required this.callback
   });
 
@@ -47,7 +51,9 @@ class ComicCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
       ),
-      child: ComicThumb(),
+      child: ComicThumb(
+        thumb: MemoryImage(thumb),
+      ),
     );
   }
 

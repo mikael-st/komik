@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:archive/archive_io.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heroicons/heroicons.dart';
@@ -16,6 +17,9 @@ import 'package:komik/pages/reading_page.dart';
 import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
+import 'package:komik/service/models/comic.dart';
+import 'package:komik/service/utils/cbz_decoder.dart';
+import 'package:komik/service/utils/fetch_comics.dart';
 import 'package:komik/service/utils/file_manager.dart';
 import 'package:komik/service/utils/permissions_manager.dart';
 
@@ -31,23 +35,34 @@ class KomikApp extends StatefulWidget {
 }
 
 class _KomikAppState extends State<KomikApp> {
+  final PermissionsManager permissionManager = PermissionsManager();
+  late FetchComics fetchComics = FetchComics(
+    fileManager: FileManager(permissionManager: permissionManager),
+    decoder: CBZDecoder(decoder: ZipDecoder())
+  );
+
+  late List<Comic> comics;
+
+  bool hasBeenInitialize = false;
+
   int index = 0;
-  Map<int, Widget> content = {
-    0: LibraryPage(),
+  late Map<int, Widget> content = {
+    0: LibraryPage(comics: comics),
     1: ComicsPage(),
     2: CollectionsPage(),
     3: ReadingPage()
   };
 
-  final PermissionsManager permissionManager = PermissionsManager();
-  late FileManager fileManager = FileManager(permissionManager: permissionManager);
-
-  final List<File> comics = [];
-
   @override
   void initState() {
     super.initState();
     permissionManager.storage();
+    fetchComics.fetch().then(
+      (files) => setState(() {
+        comics = files;
+        hasBeenInitialize = true;
+      })
+    );
   }
 
   @override
@@ -80,29 +95,8 @@ class _KomikAppState extends State<KomikApp> {
       appBar: ToolBar(
         leading: Logo(),
       ),
-      body: _content(),
+      body: hasBeenInitialize ? content[index] : _loading(),//_content(),
       bottomNavigationBar: _navBar(),
-    );
-  }
-
-  Widget _content() {
-    return FutureBuilder(
-      future: fileManager.getCBZ(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return _loading();
-        } else if (snapshot.hasData) {
-          return Container(
-            child: ListView(
-              children: snapshot.data!.map(
-                (comic) => Text(comic.path)
-              ).toList(),
-            ),
-          );
-        } else {
-          return Text('nada aqui');
-        }
-      }
     );
   }
 
@@ -178,13 +172,4 @@ class _KomikAppState extends State<KomikApp> {
       );
   }
 
-  void setComics(AsyncSnapshot<List<File>> snapshot) {
-    if (snapshot.hasData) {
-      setState(() {
-        snapshot.data!.map(
-          (file) => comics.add(file)
-        );
-      });
-    }
-  }
 }

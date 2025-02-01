@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:komik/components/cards/comic_card.dart';
 
@@ -17,6 +19,7 @@ class ComicsPage extends StatelessWidget {
             (index) => ComicCard(
               title: 'Title',
               subtitle: 'Edição 00',
+              thumb: Uint8List(0),
               callback: () => Navigator.pushNamed(context, '/reader'),
             )
           ),

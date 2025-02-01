@@ -12,6 +12,6 @@ class CBZDecoder implements FileDecoder {
 
   @override
   decode(File file) {
-    return _decoder.decodeBytes(file.readAsBytesSync());
+    return _decoder.decodeStream(InputFileStream(file.path));
   }
 }

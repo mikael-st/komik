@@ -14,7 +14,7 @@ class FileManager {
     if (await _permissionManager.storage()) {
       try {
         final directory = Directory(_path);
-        print('pegando arquivos');
+        
         return await directory.list().toList();
       } catch (err) {
         throw Exception(err);
@@ -35,12 +35,15 @@ class FileManager {
   }
 
   renameCBR() async {
-    final comics = await _getFiles();
+    var comics = await _getFiles();
     
-    comics.where((file) => file is File && file.path.endsWith('.cbr')).toList();
-  
-    for (final comic in comics) {
-      await comic.rename(comic.path.replaceRange(comic.path.length-1, comic.path.length, 'z'));
+    comics = comics.where((file) => file is File && file.path.endsWith('.cbr')).toList();
+
+    if (comics.isNotEmpty) {
+      print('chamou isso aqui');
+      for (final comic in comics) {
+        await comic.rename(comic.path.replaceRange(comic.path.length-1, comic.path.length, 'z'));
+      }
     }
   }
 
