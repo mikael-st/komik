@@ -8,17 +8,21 @@ class PermissionsManager {
       if (await Permission.storage.request().isGranted) {
         return true;
       } else {
-        Get.snackbar('Permissão negada',
-          'Por favor, aceite a permissão para acessar asmúsicas',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Palette.items,
-          colorText: Palette.white
-        );
+        request();
         storage();
         return false;
       }
     } catch (err) {
       throw Exception(err);
     }
+  }
+
+  SnackbarController request() {
+    return Get.snackbar('Permissão negada',
+          'Por favor, aceite a permissão para acessar os arquivos',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Palette.items,
+          colorText: Palette.white
+        );
   }
 }

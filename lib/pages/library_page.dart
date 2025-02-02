@@ -8,7 +8,7 @@ import 'package:komik/service/dto/comic_reader_infos.dart';
 import 'package:komik/service/models/comic.dart';
 
 class LibraryPage extends StatelessWidget {
-  final List<Comic> comics;
+  final Stream<List<Comic>> comics;
 
   const LibraryPage({
     super.key,
@@ -20,7 +20,7 @@ class LibraryPage extends StatelessWidget {
     return Container(
       height: double.infinity,
       margin: EdgeInsets.symmetric(vertical: 16),
-      alignment: Alignment.center,
+      alignment: Alignment.topCenter,
       child: _content(context)
     );
   }
@@ -65,29 +65,43 @@ class LibraryPage extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            spacing: 12,
-            children: comics.map( 
-              (comic) => ComicCard(
-                title: comic.title,
-                subtitle: 'Edição ${comic.edition}',
-                thumb: comic.thumb,
-                callback: () => Navigator.pushNamed(
-                                  context,
-                                  '/reader',
-                                  arguments: comic as ComicReaderInfos
-                                ),
-              )
-            ).toList()
+          child: StreamBuilder(
+            stream: comics,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return _notFoundComics();
+              }
+  
+              return _comicsFounded(context, snapshot.data!);
+            }
           )
         )
       ],
     );
   }
 
+  Widget _comicsFounded(BuildContext context, List<Comic> comics) {
+    return Column(
+      spacing: 12,
+      children: comics.map( 
+        (comic) => ComicCard(
+          title: comic.title,
+          subtitle: 'Edição ${comic.edition}',
+          thumb: comic.thumb,
+          callback: () => Navigator.pushNamed(
+                            context,
+                            '/reader',
+                            arguments: comic as ComicReaderInfos
+                          ),
+        )
+      ).toList()
+    );
+  }
+
   Widget _notFoundComics() {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text('Nenhum quadrinho encontrado', style: KomikTypography.base),
         TextButton(
@@ -98,3 +112,5 @@ class LibraryPage extends StatelessWidget {
     );
   }
 }
+
+// 

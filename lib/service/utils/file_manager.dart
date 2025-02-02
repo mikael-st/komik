@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:komik/service/utils/permissions_manager.dart';
@@ -5,45 +6,51 @@ import 'package:komik/service/utils/permissions_manager.dart';
 class FileManager {
   final String _path = '/storage/emulated/0/Comics';
   final PermissionsManager _permissionManager;
+  final StreamController<List<File>> _controller = StreamController<List<File>>();
 
-  const FileManager({
+  FileManager({
     required PermissionsManager permissionManager
   }) : _permissionManager = permissionManager;
 
-  Future<List<FileSystemEntity>> _getFiles() async {
+  Future<void> getFiles() async {
     if (await _permissionManager.storage()) {
       try {
         final directory = Directory(_path);
         
-        return await directory.list().toList();
+        final files = await directory.list().toList();
+        final List<File> comics = [];
+
+        for (var file in files) {
+          if (isComicFile(file as File)) {
+            await _renameCBR(file);
+            comics.add(file);
+            _controller.add(List.from(comics));
+          }
+        }
+
+        _controller.close();
       } catch (err) {
         throw Exception(err);
       }
     } else {
-      print('Permissão negada');
-      return [];
+      _permissionManager.request();
     }
   }
 
-  Future<List<File>> getCBZ() async {
-    final comics = await _getFiles();
-    
-    return comics
-    .where((file) => file is File && file.path.endsWith('.cbz'))
-    .map((f) => File(f.path))
-    .toList();
-  }
-
-  renameCBR() async {
-    var comics = await _getFiles();
-    
-    comics = comics.where((file) => file is File && file.path.endsWith('.cbr')).toList();
-
-    if (comics.isNotEmpty) {
-      for (final comic in comics) {
-        await comic.rename(comic.path.replaceRange(comic.path.length-1, comic.path.length, 'z'));
-      }
+  bool isComicFile(File file) {
+    if (file.path.endsWith('.cbz') || file.path.endsWith('.cbr')) {
+      return true;
+    } else {
+      return false;
     }
   }
+
+  _renameCBR(File file) async {
+    if (file.path.endsWith('.cbr')) {
+      await file.rename(file.path.replaceAll('.cbr', '.cbz'));
+    }
+  }
+
+  Stream<List<File>> get files => _controller.stream;
 
 }
