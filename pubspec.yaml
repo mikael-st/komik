@@ -43,6 +43,8 @@ dependencies:
   flutter_archive: ^6.0.3
   objectbox_flutter_libs: ^4.0.3
   archive: ^4.0.2
+  external_path: ^2.0.1
+  # unrar_file: ^1.1.0
 
 dev_dependencies:
   flutter_test:

@@ -1,22 +1,32 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:external_path/external_path.dart';
 import 'package:komik/service/utils/permissions_manager.dart';
 
 class FileManager {
-  final String _path = '/storage/emulated/0/Comics';
   final PermissionsManager _permissionManager;
   final StreamController<List<File>> _controller = StreamController<List<File>>();
-
+  
   FileManager({
     required PermissionsManager permissionManager
   }) : _permissionManager = permissionManager;
 
+  Future<void> createComicsFolder() async {
+    if (await _permissionManager.accessStorageGranted()) {
+      final path = await ExternalPath.getExternalStorageDirectories();
+      
+      final directory = await Directory('${path[0]}/Comics').create(recursive: true);
+    }
+  }
+
   Future<void> getFiles() async {
-    if (await _permissionManager.storage()) {
+    if (await _permissionManager.accessStorageGranted()) {
       try {
-        final directory = Directory(_path);
+        final path = await ExternalPath.getExternalStoragePublicDirectory(ExternalPath.DIRECTORY_COMICS);
         
+        final directory = Directory(path);
+
         final files = await directory.list().toList();
         final List<File> comics = [];
 
@@ -27,7 +37,6 @@ class FileManager {
             _controller.add(List.from(comics));
           }
         }
-
         _controller.close();
       } catch (err) {
         throw Exception(err);

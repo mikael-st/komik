@@ -6,7 +6,7 @@ import 'package:komik/service/utils/enums/comic_type_enum.dart';
 class Comic implements ComicReaderInfos{
   @override
   late String        title;
-  late String        subtitle;
+  late String?        subtitle = '';
   late String        edition;
   late ComicTypeEnum type;
   late Uint8List     thumb;
@@ -23,16 +23,14 @@ class Comic implements ComicReaderInfos{
   });
 
   factory Comic.create({
-    required String fileName,
+    required Map<String, String> infos,
     required Uint8List thumb,
     required String path
   }) {
-    final values = fileName.split('#');
-    
     return Comic(
-      title: values[0],
-      edition: values[1].split('-')[0],
-      subtitle: values[1].split('-')[1],
+      title: infos['title']!,
+      edition: infos['edition']!,
+      subtitle: infos['subtitle'],
       thumb: thumb,
       type: ComicTypeEnum.edition,
       path: path

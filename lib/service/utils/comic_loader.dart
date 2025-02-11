@@ -3,6 +3,8 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
+import 'package:komik/assets/palette.dart';
 import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/file_manager.dart';
 import 'package:komik/service/utils/interfaces/file_decorder.dart';
@@ -25,7 +27,7 @@ class ComicLoader {
       _fileManager.getFiles();
       _fileManager.files.listen(
         (List<File> files) {
-          comics.add(_convertFileToComic(files.last));
+          files.isNotEmpty ? comics.add(_convertFileToComic(files.last)) : null;
         },
         onDone: () { _controller.add(comics); },
         onError: (err) {print('DEU ERRO CARALHOOOOOO $err');}
@@ -36,10 +38,11 @@ class ComicLoader {
   }
 
   Comic _convertFileToComic(File file) {
-      final fileName = path.basename(file.path).replaceAll('.cbz', '');
+      final extension = path.extension(file.path);
+      final fileName = path.basename(file.path).replaceAll(extension, '').trim();
 
       return Comic.create(
-        fileName: fileName,
+        infos: fetchInfos(fileName),
         thumb: fetchThumb(file.path),
         path: file.path
       );
@@ -51,20 +54,31 @@ class ComicLoader {
     return {
       'title': values[0],
       'edition': '00',
-      'subtitle': values[1],
+      'subtitle': values[values.length - 1]!=values[0] ? values[values.length - 1] : '',
     };
   }
 
   Uint8List fetchThumb(String filePath) {
     final archives = _decoder.decode(filePath);
-
+    
     if (archives.isEmpty) {
       return Uint8List(0);
     }
 
-    final image = archives.where((archive) => archive.name.contains('01') || archive.name.contains('000')).first;
+    var image = Uint8List(0);
 
-    return image.content;
+    try {
+      image = archives.where((archive) => archive.name.contains('01') || archive.name.contains('000')).first.content;
+    } catch (e) {
+      final extension = path.extension(filePath);
+      final fileName = path.basename(filePath).replaceAll(extension, '');
+
+      print('$fileName >>> ARQUIVO NÃO SUPORTADO');
+
+      return Uint8List(0);
+    }
+
+    return image;
   }
 
   bool isImage(String name) {
@@ -79,14 +93,20 @@ class ComicLoader {
     }
   }
 
-  List<MemoryImage> fetchPages(String path) {
+  List<MemoryImage> fetchPages(String filePath) {
     final archives = _decoder
-                      .decode(path)
+                      .decode(filePath)
                       .files;
-    
-    return archives.where((archive) => isImage(archive.name))
+    try {
+      return archives.where((archive) => isImage(archive.name))
                    .map((archive) => MemoryImage(archive.content))
                    .toList();
+    } catch (e) {
+      final extension = path.extension(filePath);
+      final fileName = path.basename(filePath).replaceAll(extension, '');
+      print('$fileName >>> ARQUIVO NÃO SUPORTADO');
+      return [];
+    }
   }
 
   Stream<List<Comic>> get comics => _controller.stream;

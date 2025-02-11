@@ -7,7 +7,7 @@ import 'package:komik/components/utils/scroller/scroller.dart';
 import 'package:komik/service/dto/comic_reader_infos.dart';
 import 'package:komik/service/models/comic.dart';
 
-class LibraryPage extends StatelessWidget {
+class LibraryPage extends StatefulWidget {
   final Stream<List<Comic>> comics;
 
   const LibraryPage({
@@ -15,6 +15,11 @@ class LibraryPage extends StatelessWidget {
     required this.comics
   });
 
+  @override
+  State<LibraryPage> createState() => _LibraryPageState();
+}
+
+class _LibraryPageState extends State<LibraryPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -66,7 +71,7 @@ class LibraryPage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: StreamBuilder(
-            stream: comics,
+            stream: widget.comics,
             builder: (context, snapshot) {
               if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return _notFoundComics();

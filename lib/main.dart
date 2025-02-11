@@ -15,7 +15,7 @@ import 'package:komik/pages/reading_page.dart';
 import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
-import 'package:komik/service/database/models/comic.dart';
+// import 'package:komik/service/database/models/comic.dart';
 import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/cbz_decoder.dart';
 import 'package:komik/service/utils/comic_loader.dart';
@@ -35,41 +35,39 @@ class KomikApp extends StatefulWidget {
 
 class _KomikAppState extends State<KomikApp> {
   final PermissionsManager permissionManager = PermissionsManager();
+  late FileManager fileManager;
   late ComicLoader comicLoader;
 
   late List<Comic> comics = [];
 
-  bool hasBeenInitialize = false;
-
   int index = 0;
-  late Map<int, Widget> content;
+  late Map<int, Widget> content = {
+    0: LibraryPage(comics: comicLoader.comics),
+    1: ComicsPage(),
+    2: CollectionsPage(),
+    3: ReadingPage()
+  };
 
   @override
   void initState() {
     super.initState();
-    permissionManager.storage();
     setState(() {
+      fileManager = FileManager(permissionManager: permissionManager);
       comicLoader = ComicLoader(
-        fileManager: FileManager(permissionManager: permissionManager),
+        fileManager: fileManager,
         decoder: CBZDecoder(decoder: ZipDecoder())
       );
     });
-    hasBeenInitialize = true;
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
 
-    comicLoader.fetch();
-    setState(() {
-      content = {
-        0: LibraryPage(comics: comicLoader.comics),
-        1: ComicsPage(),
-        2: CollectionsPage(),
-        3: ReadingPage()
-      };
-    });
+  //   comicLoader.fetch();
+  //   setState(() {
+      
+  //   });
     
     // fetchComics.fetch().then(
     //   (files) => setState(() {
@@ -77,7 +75,7 @@ class _KomikAppState extends State<KomikApp> {
     //     hasBeenInitialize = true;
     //   })
     // );
-  }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +107,19 @@ class _KomikAppState extends State<KomikApp> {
       appBar: ToolBar(
         leading: Logo(),
       ),
-      body: hasBeenInitialize ? content[index] : _loading(),//_content(),
+      body: FutureBuilder(
+        future: permissionManager.request(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return _loading();
+          }
+
+          fileManager.createComicsFolder();
+          comicLoader.fetch();
+
+          return content[index]!;
+        }
+      ),//_content(),
       bottomNavigationBar: _navBar(),
     );
   }
