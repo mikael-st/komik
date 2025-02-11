@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:archive/archive_io.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:komik/assets/palette.dart';
@@ -24,13 +25,17 @@ class ComicLoader {
     try {
       final List<Comic> comics = [];
 
-      _fileManager.getFiles();
+      await _fileManager.getFiles();
+      
       _fileManager.files.listen(
-        (List<File> files) {
-          files.isNotEmpty ? comics.add(_convertFileToComic(files.last)) : null;
+        (File file) {
+          comics.add(_convertFileToComic(file));
+          _controller.add(List.from(comics));
         },
-        onDone: () { _controller.add(comics); },
-        onError: (err) {print('DEU ERRO CARALHOOOOOO $err');}
+        onDone: () {
+          print('ALL COMICS LOADED');
+          _controller.close();
+        }
       );
     } catch (err) {
       throw Exception(err);
@@ -59,26 +64,25 @@ class ComicLoader {
   }
 
   Uint8List fetchThumb(String filePath) {
-    final archives = _decoder.decode(filePath);
-    
-    if (archives.isEmpty) {
-      return Uint8List(0);
-    }
-
-    var image = Uint8List(0);
-
     try {
-      image = archives.where((archive) => archive.name.contains('01') || archive.name.contains('000')).first.content;
-    } catch (e) {
+      final archives = _decoder.decode(filePath);
+      
+      return archives.where((archive) => archive.name.contains('01') || archive.name.contains('000')).first.content;
+    } on PathNotFoundException {
       final extension = path.extension(filePath);
       final fileName = path.basename(filePath).replaceAll(extension, '');
 
       print('$fileName >>> ARQUIVO NÃO SUPORTADO');
 
       return Uint8List(0);
-    }
+    } on StateError {
+      final extension = path.extension(filePath);
+      final fileName = path.basename(filePath).replaceAll(extension, '');
 
-    return image;
+      print('$fileName >>> ARQUIVO CORROMPIDO');
+
+      return Uint8List(0);
+    }
   }
 
   bool isImage(String name) {

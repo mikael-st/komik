@@ -38,8 +38,6 @@ class _KomikAppState extends State<KomikApp> {
   late FileManager fileManager;
   late ComicLoader comicLoader;
 
-  late List<Comic> comics = [];
-
   int index = 0;
   late Map<int, Widget> content = {
     0: LibraryPage(comics: comicLoader.comics),
@@ -60,22 +58,13 @@ class _KomikAppState extends State<KomikApp> {
     });
   }
 
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  //   comicLoader.fetch();
-  //   setState(() {
-      
-  //   });
+    comicLoader.fetch();
     
-    // fetchComics.fetch().then(
-    //   (files) => setState(() {
-    //     comics = files;
-    //     hasBeenInitialize = true;
-    //   })
-    // );
-  // }
+  }
 
   @override
   Widget build(BuildContext context) {
