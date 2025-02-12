@@ -16,11 +16,11 @@ class FileManager {
     if (await _permissionManager.accessStorageGranted()) {
       final path = await ExternalPath.getExternalStoragePublicDirectory('');
       
-      await Directory('$path/Comics').create(recursive: true);
+      await Directory('$path/Comics/testes').create(recursive: true);
     }
   }
 
-  Future<void> getFiles() async {
+  Future<void> fetch() async {
     if (await _permissionManager.accessStorageGranted()) {
       try {
         final path = await ExternalPath.getExternalStoragePublicDirectory('Comics');

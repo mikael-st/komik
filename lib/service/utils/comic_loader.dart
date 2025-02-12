@@ -2,10 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:archive/archive_io.dart';
 import 'package:flutter/widgets.dart';
-import 'package:get/get.dart';
-import 'package:komik/assets/palette.dart';
 import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/file_manager.dart';
 import 'package:komik/service/utils/interfaces/file_decorder.dart';
@@ -25,7 +22,7 @@ class ComicLoader {
     try {
       final List<Comic> comics = [];
 
-      await _fileManager.getFiles();
+      await _fileManager.fetch();
       
       _fileManager.files.listen(
         (File file) {

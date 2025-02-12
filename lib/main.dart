@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/icons/logo.dart';
 import 'package:komik/assets/palette.dart';
+import 'package:komik/assets/typography.dart';
 import 'package:komik/components/tool-bars/tool_bar.dart';
 import 'package:komik/pages/collection_info.dart';
 import 'package:komik/pages/collections_page.dart';
@@ -21,6 +22,7 @@ import 'package:komik/service/utils/cbz_decoder.dart';
 import 'package:komik/service/utils/comic_loader.dart';
 import 'package:komik/service/utils/file_manager.dart';
 import 'package:komik/service/utils/permissions_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() {
   runApp(const KomikApp());
@@ -97,14 +99,13 @@ class _KomikAppState extends State<KomikApp> {
         leading: Logo(),
       ),
       body: FutureBuilder(
-        future: permissionManager.request(),
+        future: init(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return _loading();
+          } else if (!permissionManager.haveAccessStorage) {
+            return _acceptStoragePermission();
           }
-
-          fileManager.createComicsFolder();
-          comicLoader.fetch();
 
           return content[index]!;
         }
@@ -119,6 +120,28 @@ class _KomikAppState extends State<KomikApp> {
         color: Palette.details,
       ),
     );
+  }
+
+  Widget _acceptStoragePermission() {
+    return Center(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Aceite a permissão para acesso ao armazenamento',
+            style: KomikTypography.base,
+            textAlign: TextAlign.center,
+          ),
+          TextButton(
+            onPressed: () => print('Go to Phone Settings'),
+            child: Text('Ir para configurações', style: KomikTypography.action_button)
+          )
+        ],
+      )
+    );
+    
+    
   }
 
   Widget _navBar() {
@@ -183,6 +206,15 @@ class _KomikAppState extends State<KomikApp> {
           indicatorColor: const Color.fromARGB(83, 228, 25, 59),
         )),
       );
+  }
+
+  Future<void> init() async {
+    final result = await Future.wait([
+      permissionManager.request(),
+      permissionManager.accessStorageGranted(),
+      fileManager.fetch(),
+      comicLoader.fetch()
+    ]);
   }
 
 }
