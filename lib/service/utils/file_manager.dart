@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:external_path/external_path.dart';
-import 'package:flutter/foundation.dart';
 import 'package:komik/service/utils/permissions_manager.dart';
 
 class FileManager {

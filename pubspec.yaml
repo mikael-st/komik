@@ -44,7 +44,7 @@ dependencies:
   objectbox_flutter_libs: ^4.0.3
   archive: ^4.0.2
   external_path: ^2.0.1
-  # device_info_plus: ^11.3.0
+  device_info_plus: ^11.3.0
   easy_permission_validator: ^5.0.1
   # unrar_file: ^1.1.0
 

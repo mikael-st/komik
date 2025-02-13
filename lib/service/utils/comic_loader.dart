@@ -66,7 +66,7 @@ class ComicLoader {
     try {
       final archives = _decoder.decode(filePath);
       
-      return archives.where((archive) => archive.name.contains('01') || archive.name.contains('000')).first.content;
+      return archives.where((archive) => archive.name.contains('01.jpg') || archive.name.contains('000.jpg')).first.content;
     } on PathNotFoundException {
       final extension = path.extension(filePath);
       final fileName = path.basename(filePath).replaceAll(extension, '');
