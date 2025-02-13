@@ -17,7 +17,7 @@ class EditComicInfos extends StatelessWidget {
       appBar: ComicEditToolbar(),
       body: _content(),
       floatingActionButton: ConfirmBtn(
-        action: () => print('SAVED')
+        action: () => debugPrint('SAVED')
       ),
     );
   }

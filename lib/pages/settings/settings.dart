@@ -42,7 +42,7 @@ class _SettingsState extends State<Settings> {
               label: 'Linguagem',
               trailing: Text('Pt-BR', style: KomikTypography.language),
               action: () {
-                print('Open language selector modal');
+                debugPrint('Open language selector modal');
               },
             ),
           ),

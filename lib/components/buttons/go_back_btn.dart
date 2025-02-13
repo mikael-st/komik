@@ -12,7 +12,7 @@ class GoBackBtn extends StatelessWidget {
     return IconButton(
       onPressed: (){
         Navigator.pop(context);
-        print('Go Back');
+        debugPrint('Go Back');
       },
       style: IconButton.styleFrom(
         shape: RoundedRectangleBorder(),

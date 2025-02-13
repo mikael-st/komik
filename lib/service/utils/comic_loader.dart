@@ -20,6 +20,8 @@ class ComicLoader {
   
   Future<void> fetch() async {
     try {
+      debugPrint('CALLED ComicLoader.fetch()');
+      
       final List<Comic> comics = [];
 
       await _fileManager.fetch();
@@ -30,7 +32,7 @@ class ComicLoader {
           _controller.add(List.from(comics));
         },
         onDone: () {
-          print('ALL COMICS LOADED');
+          debugPrint('ALL COMICS LOADED');
           _controller.close();
         }
       );
@@ -69,14 +71,14 @@ class ComicLoader {
       final extension = path.extension(filePath);
       final fileName = path.basename(filePath).replaceAll(extension, '');
 
-      print('$fileName >>> ARQUIVO NÃO SUPORTADO');
+      debugPrint('$fileName >>> ARQUIVO NÃO SUPORTADO');
 
       return Uint8List(0);
     } on StateError {
       final extension = path.extension(filePath);
       final fileName = path.basename(filePath).replaceAll(extension, '');
 
-      print('$fileName >>> ARQUIVO CORROMPIDO');
+      debugPrint('$fileName >>> ARQUIVO CORROMPIDO');
 
       return Uint8List(0);
     }
@@ -105,7 +107,7 @@ class ComicLoader {
     } catch (e) {
       final extension = path.extension(filePath);
       final fileName = path.basename(filePath).replaceAll(extension, '');
-      print('$fileName >>> ARQUIVO NÃO SUPORTADO');
+      debugPrint('$fileName >>> ARQUIVO NÃO SUPORTADO');
       return [];
     }
   }

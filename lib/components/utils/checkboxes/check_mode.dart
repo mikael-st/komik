@@ -23,7 +23,7 @@ class CheckMode extends StatelessWidget {
     return InkWell(
       onTap: () {
         onChanged(type);
-        print('type selected: ${type.value}');
+        debugPrint('type selected: ${type.value}');
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

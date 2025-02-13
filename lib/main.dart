@@ -1,4 +1,5 @@
 import 'package:archive/archive_io.dart';
+import 'package:easy_permission_validator/easy_permission_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:heroicons/heroicons.dart';
@@ -17,7 +18,7 @@ import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
 // import 'package:komik/service/database/models/comic.dart';
-import 'package:komik/service/models/comic.dart';
+// import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/cbz_decoder.dart';
 import 'package:komik/service/utils/comic_loader.dart';
 import 'package:komik/service/utils/file_manager.dart';
@@ -36,42 +37,45 @@ class KomikApp extends StatefulWidget {
 }
 
 class _KomikAppState extends State<KomikApp> {
-  final PermissionsManager permissionManager = PermissionsManager();
+  final String appName = 'Komik';
+
+  late PermissionsManager permissionManager;
   late FileManager fileManager;
   late ComicLoader comicLoader;
 
   int index = 0;
-  late Map<int, Widget> content = {
-    0: LibraryPage(comics: comicLoader.comics),
-    1: ComicsPage(),
-    2: CollectionsPage(),
-    3: ReadingPage()
-  };
+
+  bool hasBeenInitialize = false;
 
   @override
   void initState() {
     super.initState();
     setState(() {
+      permissionManager = PermissionsManager(
+        validator: EasyPermissionValidator(
+          context: context,
+          appName: appName,
+        )
+      );
       fileManager = FileManager(permissionManager: permissionManager);
       comicLoader = ComicLoader(
         fileManager: fileManager,
         decoder: CBZDecoder(decoder: ZipDecoder())
       );
     });
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    comicLoader.fetch();
-    
+    permissionManager.request().then(
+      (_) {
+        setState((){});
+        fileManager.createComicsFolder();
+        comicLoader.fetch();
+      }
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Komik',
+      title: appName,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: Palette.background,
@@ -98,18 +102,9 @@ class _KomikAppState extends State<KomikApp> {
       appBar: ToolBar(
         leading: Logo(),
       ),
-      body: FutureBuilder(
-        future: init(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return _loading();
-          } else if (!permissionManager.haveAccessStorage) {
-            return _acceptStoragePermission();
-          }
-
-          return content[index]!;
-        }
-      ),//_content(),
+      body: permissionManager.haveStorageAccess
+                  ? _content(index)
+                  : _acceptStoragePermission(),
       bottomNavigationBar: _navBar(),
     );
   }
@@ -134,14 +129,28 @@ class _KomikAppState extends State<KomikApp> {
             textAlign: TextAlign.center,
           ),
           TextButton(
-            onPressed: () => print('Go to Phone Settings'),
+            onPressed: () {
+              debugPrint('Go to Phone Settings');
+              openAppSettings();  
+            },
             child: Text('Ir para configurações', style: KomikTypography.action_button)
           )
         ],
       )
     );
-    
-    
+  }
+
+  Widget _content(int index) {
+    print('Storage Access: ${permissionManager.haveStorageAccess}');
+
+    final pages = {
+      0: LibraryPage(comics: comicLoader.comics),
+      1: ComicsPage(),
+      2: CollectionsPage(),
+      3: ReadingPage()
+    };
+
+    return pages[index]!;
   }
 
   Widget _navBar() {
@@ -206,15 +215,6 @@ class _KomikAppState extends State<KomikApp> {
           indicatorColor: const Color.fromARGB(83, 228, 25, 59),
         )),
       );
-  }
-
-  Future<void> init() async {
-    final result = await Future.wait([
-      permissionManager.request(),
-      permissionManager.accessStorageGranted(),
-      fileManager.fetch(),
-      comicLoader.fetch()
-    ]);
   }
 
 }

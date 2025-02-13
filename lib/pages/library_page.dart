@@ -68,7 +68,7 @@ class LibraryPage extends StatelessWidget {
           child: StreamBuilder(
             stream: comics,
             builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              if (!snapshot.hasData) {
                 return _notFoundComics();
               }
   
@@ -105,7 +105,7 @@ class LibraryPage extends StatelessWidget {
       children: [
         Text('Nenhum quadrinho encontrado', style: KomikTypography.base),
         TextButton(
-          onPressed: () => print('Go to Files Selector'),
+          onPressed: () => debugPrint('Go to Files Selector'),
           child: Text('Adicionar', style: KomikTypography.action_button)
         )
       ],

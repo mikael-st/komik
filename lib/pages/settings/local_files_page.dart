@@ -16,7 +16,7 @@ class LocalFilesPage extends StatelessWidget {
       body: _content(),
       floatingActionButton: AddBtn(
         action: () {
-          print('Open file picker');
+          debugPrint('Open file picker');
         },
       ),
     );

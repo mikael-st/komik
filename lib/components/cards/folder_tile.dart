@@ -18,7 +18,7 @@ class FolderTile extends StatelessWidget {
         )
       ),
       child: ListTile(
-        onTap: () => print('Open modal to delete folder'),
+        onTap: () => debugPrint('Open modal to delete folder'),
         contentPadding: EdgeInsets.all(16),
         leading: HeroIcon(
           HeroIcons.folder,

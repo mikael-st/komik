@@ -18,7 +18,7 @@ class ComicEditToolbar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Palette.items,
       actions: [
         CloseBtn(
-          action: () => print('Close and reset controllers'),
+          action: () => debugPrint('Close and reset controllers'),
         ),
       ],
     );

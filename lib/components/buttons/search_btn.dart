@@ -10,7 +10,7 @@ class SearchBtn extends StatelessWidget {
     return IconButton(
       onPressed: (){
         Navigator.pushNamed(context, '/search');
-        print('Open SearchBar');
+        debugPrint('Open SearchBar');
       },
       style: IconButton.styleFrom(
         shape: RoundedRectangleBorder(),

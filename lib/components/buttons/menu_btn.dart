@@ -10,7 +10,7 @@ class MenuBtn extends StatelessWidget {
     return IconButton(
       onPressed: (){
         Navigator.pushNamed(context, '/settings');
-        print('Open Bottom Menu');
+        debugPrint('Open Bottom Menu');
       },
       style: IconButton.styleFrom(
         shape: RoundedRectangleBorder(),
