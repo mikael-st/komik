@@ -67,9 +67,14 @@ class _KomikAppState extends State<KomikApp> {
       (_) {
         setState((){});
         fileManager.createComicsFolder();
-        comicLoader.fetch();
       }
     );
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    comicLoader.fetch();
   }
 
   @override
@@ -144,7 +149,7 @@ class _KomikAppState extends State<KomikApp> {
     print('Storage Access: ${permissionManager.haveStorageAccess}');
 
     final pages = {
-      0: LibraryPage(comics: comicLoader.comics),
+      0: LibraryPage(comicLoader: comicLoader),
       1: ComicsPage(),
       2: CollectionsPage(),
       3: ReadingPage()

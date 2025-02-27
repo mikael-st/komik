@@ -28,12 +28,10 @@ class FileManager {
         final directory = Directory(path);
 
         final files = await directory.list().toList();
-        final List<File> comics = [];
 
         for (var file in files) {
           if (isComicFile(file as File)) {
             await _renameCBR(file);
-            comics.add(file);
             controller.add(file);
           }
         }

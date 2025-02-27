@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:komik/assets/typography.dart';
 import 'package:komik/components/cards/comic_card.dart';
@@ -6,14 +8,26 @@ import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/utils/scroller/scroller.dart';
 import 'package:komik/service/dto/comic_reader_infos.dart';
 import 'package:komik/service/models/comic.dart';
+import 'package:komik/service/utils/comic_loader.dart';
 
-class LibraryPage extends StatelessWidget {
-  final Stream<List<Comic>> comics;
+class LibraryPage extends StatefulWidget {
+  // final Stream<List<String>> comics;
+  final ComicLoader comicLoader;
 
   const LibraryPage({
     super.key,
-    required this.comics
+    required this.comicLoader
   });
+
+  @override
+  State<LibraryPage> createState() => _LibraryPageState();
+}
+
+class _LibraryPageState extends State<LibraryPage> {
+  final controller = StreamController<List<String>>();
+  final List<String> numbers = [];
+
+  int value = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +40,12 @@ class LibraryPage extends StatelessWidget {
   }
 
   Widget _content(BuildContext context) {
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      value++;
+      numbers.add('$value');
+      controller.add(List.from(numbers));
+    });
+
     return SingleChildScrollView(
       child: Column(
         spacing: 28,
@@ -66,7 +86,7 @@ class LibraryPage extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: StreamBuilder(
-            stream: comics,
+            stream: widget.comicLoader.controller.stream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
                 return _notFoundComics();
@@ -80,11 +100,13 @@ class LibraryPage extends StatelessWidget {
     );
   }
 
-  Widget _comicsFounded(BuildContext context, List<Comic> comics) {
+  Widget _comicsFounded(BuildContext context, List<String> comics) {
     return Column(
       spacing: 12,
       children: comics.map( 
-        (comic) => ComicCard(
+        (comic) => Text(comic, style: KomikTypography.base)
+        
+        /* ComicCard(
           title: comic.title,
           subtitle: 'Edição ${comic.edition}',
           thumb: comic.thumb,
@@ -93,7 +115,7 @@ class LibraryPage extends StatelessWidget {
                             '/reader',
                             arguments: comic as ComicReaderInfos
                           ),
-        )
+        )*/
       ).toList()
     );
   }

@@ -11,7 +11,7 @@ import 'package:path/path.dart' as path;
 class ComicLoader {
   final FileManager _fileManager;
   final FileDecoder _decoder;
-  final StreamController<List<Comic>> _controller = StreamController<List<Comic>>();
+  final StreamController<List<String>> controller = StreamController<List<String>>();
   
   ComicLoader({
     required FileDecoder decoder,
@@ -22,18 +22,20 @@ class ComicLoader {
     try {
       debugPrint('CALLED ComicLoader.fetch()');
       
-      final List<Comic> comics = [];
+      final List<String> comics = [];
 
-      await _fileManager.fetch();
+      _fileManager.fetch();
       
       _fileManager.files.listen(
         (File file) {
-          comics.add(_convertFileToComic(file));
-          _controller.add(List.from(comics));
+          final comic = _convertFileToComic(file);
+          debugPrint(comic.title);
+          comics.add(comic.title);
+          controller.add(List.from(comics));
         },
         onDone: () {
           debugPrint('ALL COMICS LOADED');
-          _controller.close();
+          controller.close();
         }
       );
     } catch (err) {
@@ -97,20 +99,24 @@ class ComicLoader {
   }
 
   List<MemoryImage> fetchPages(String filePath) {
-    final archives = _decoder
+    try {
+      final archives = _decoder
                       .decode(filePath)
                       .files;
-    try {
       return archives.where((archive) => isImage(archive.name))
                    .map((archive) => MemoryImage(archive.content))
                    .toList();
-    } catch (e) {
+    } on StateError {
       final extension = path.extension(filePath);
       final fileName = path.basename(filePath).replaceAll(extension, '');
-      debugPrint('$fileName >>> ARQUIVO NÃO SUPORTADO');
+
+      debugPrint('$fileName >>> ARQUIVO CORROMPIDO');
+
       return [];
+    } catch (err) {
+      throw Exception(err);
     }
   }
 
-  Stream<List<Comic>> get comics => _controller.stream;
+  Stream<List<String>> get comics => controller.stream;
 }
