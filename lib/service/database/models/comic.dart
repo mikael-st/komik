@@ -1,27 +1,29 @@
-/* import 'dart:typed_data';
+import 'dart:typed_data';
 
-import 'package:komik/service/utils/enums/comic_type_enum.dart';
+import 'package:komik/service/database/models/collection.dart';
 import 'package:objectbox/objectbox.dart';
 
 @Entity()
 class Comic {
   @Id()
-  int id;
+  int id = 0;
   
   late String        title;
-  late String        subtitle;
+  late String        subtitle = '';
   late String        edition;
+  late int           totalPages;
   late Uint8List     thumb;
   late String        path;
-  late ComicTypeEnum type;
+
+  final collection = ToOne<Collection>();
 
   Comic({
-    this.id = 0,
     required this.title,
     required this.subtitle,
     required this.thumb,
     required this.edition,
     required this.path,
-    this.type = ComicTypeEnum.edition
+    required this.totalPages,
   });
-} */
+
+}

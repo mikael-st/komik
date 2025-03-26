@@ -17,6 +17,10 @@ import 'package:komik/pages/reading_page.dart';
 import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
+import 'package:komik/service/database/database.dart';
+import 'package:komik/service/database/models/comic.dart';
+import 'package:komik/service/managers/comic_manager.dart';
+import 'package:komik/service/repositories/comic_repository.dart';
 // import 'package:komik/service/database/models/comic.dart';
 // import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/cbz_decoder.dart';
@@ -39,43 +43,20 @@ class KomikApp extends StatefulWidget {
 class _KomikAppState extends State<KomikApp> {
   final String appName = 'Komik';
 
-  late PermissionsManager permissionManager;
+  final _database = DB();
+
+  late PermissionsManager permissionManager = PermissionsManager(
+      validator: EasyPermissionValidator(
+        context: context,
+        appName: appName,
+      )
+    );
   late FileManager fileManager;
   late ComicLoader comicLoader;
 
+  late ComicRepository comicRepository;
+
   int index = 0;
-
-  bool hasBeenInitialize = false;
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      permissionManager = PermissionsManager(
-        validator: EasyPermissionValidator(
-          context: context,
-          appName: appName,
-        )
-      );
-      fileManager = FileManager(permissionManager: permissionManager);
-      comicLoader = ComicLoader(
-        fileManager: fileManager,
-        decoder: CBZDecoder(decoder: ZipDecoder())
-      );
-    });
-    permissionManager.request().then(
-      (_) {
-        setState((){});
-        fileManager.createComicsFolder();
-      }
-    );
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    comicLoader.fetch();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +88,14 @@ class _KomikAppState extends State<KomikApp> {
       appBar: ToolBar(
         leading: Logo(),
       ),
-      body: permissionManager.haveStorageAccess
-                  ? _content(index)
-                  : _acceptStoragePermission(),
+      body: FutureBuilder(
+        future: init(),
+        builder: (context, snapshot) {
+          return permissionManager.haveStorageAccess
+          ? _content(index)
+          : _acceptStoragePermission();
+        }
+      ),
       bottomNavigationBar: _navBar(),
     );
   }
@@ -124,32 +110,32 @@ class _KomikAppState extends State<KomikApp> {
 
   Widget _acceptStoragePermission() {
     return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            'Aceite a permissão para acesso ao armazenamento',
-            style: KomikTypography.base,
-            textAlign: TextAlign.center,
-          ),
-          TextButton(
+        child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Aceite a permissão para acesso ao armazenamento',
+          style: KomikTypography.base,
+          textAlign: TextAlign.center,
+        ),
+        TextButton(
             onPressed: () {
               debugPrint('Go to Phone Settings');
-              openAppSettings();  
+              openAppSettings();
             },
-            child: Text('Ir para configurações', style: KomikTypography.action_button)
-          )
-        ],
-      )
-    );
+            child: Text('Ir para configurações',
+                style: KomikTypography.action_button))
+      ],
+    ));
   }
 
   Widget _content(int index) {
     print('Storage Access: ${permissionManager.haveStorageAccess}');
 
     final pages = {
-      0: LibraryPage(comicLoader: comicLoader),
+      0: LibraryPage(
+          comicManager: ComicManager(comic_repository: comicRepository)),
       1: ComicsPage(),
       2: CollectionsPage(),
       3: ReadingPage()
@@ -160,66 +146,83 @@ class _KomikAppState extends State<KomikApp> {
 
   Widget _navBar() {
     return Container(
-        decoration: BoxDecoration(
+      decoration: BoxDecoration(
           border: Border(top: BorderSide(color: Palette.details, width: 2))),
-        child: NavigationBarTheme(
+      child: NavigationBarTheme(
           data: NavigationBarThemeData(
-            labelTextStyle: WidgetStateProperty.all(
-              TextStyle(
-                color: Palette.white,
-                fontSize: 12,
-              )
-            )
-          ),
+              labelTextStyle: WidgetStateProperty.all(TextStyle(
+            color: Palette.white,
+            fontSize: 12,
+          ))),
           child: NavigationBar(
-          onDestinationSelected: (value) {
-            setState(() {
+            onDestinationSelected: (value) {
+              setState(() {
                 index = value;
-              }
-            );
-          },
-          destinations: [
-            NavigationDestination(
-              icon: HeroIcon(
-                HeroIcons.home,
-                style: HeroIconStyle.solid,
-                size: 24,
-                color: Palette.white,
+              });
+            },
+            destinations: [
+              NavigationDestination(
+                icon: HeroIcon(
+                  HeroIcons.home,
+                  style: HeroIconStyle.solid,
+                  size: 24,
+                  color: Palette.white,
+                ),
+                label: 'Inicio',
               ),
-              label: 'Inicio',
-            ),
-            NavigationDestination(
-              icon: HeroIcon(
-                HeroIcons.bookmarkSquare,
-                style: HeroIconStyle.solid,
-                size: 24,
-                color: Palette.white,
+              NavigationDestination(
+                icon: HeroIcon(
+                  HeroIcons.bookmarkSquare,
+                  style: HeroIconStyle.solid,
+                  size: 24,
+                  color: Palette.white,
+                ),
+                label: 'Quadrinhos',
               ),
-              label: 'Quadrinhos',
-            ),
-            NavigationDestination(
-              icon: HeroIcon(
-                HeroIcons.folder,
-                style: HeroIconStyle.solid,
-                size: 24,
-                color: Palette.white,
+              NavigationDestination(
+                icon: HeroIcon(
+                  HeroIcons.folder,
+                  style: HeroIconStyle.solid,
+                  size: 24,
+                  color: Palette.white,
+                ),
+                label: 'Coleções',
               ),
-              label: 'Coleções',
-            ),
-            NavigationDestination(
-              icon: HeroIcon(
-                HeroIcons.clock,
-                size: 24,
-                color: Palette.white,
+              NavigationDestination(
+                icon: HeroIcon(
+                  HeroIcons.clock,
+                  size: 24,
+                  color: Palette.white,
+                ),
+                label: 'Lendo',
               ),
-              label: 'Lendo',
-            ),
-          ],
-          selectedIndex: index,
-          backgroundColor: Palette.items,
-          indicatorColor: const Color.fromARGB(83, 228, 25, 59),
-        )),
-      );
+            ],
+            selectedIndex: index,
+            backgroundColor: Palette.items,
+            indicatorColor: const Color.fromARGB(83, 228, 25, 59),
+          )),
+    );
   }
 
+  Future<void> init() async {
+    await _database.init();
+
+    setState(() {
+      comicRepository = ComicRepository(box: _database.store.box<Comic>());
+      fileManager = FileManager(permission_manager: permissionManager);
+      comicLoader = ComicLoader(
+          fileManager: fileManager,
+          decoder: CBZDecoder(decoder: ZipDecoder()),
+          comic_repository: comicRepository);
+    });
+
+    await permissionManager.request();
+    setState(() {});
+
+    await fileManager.createComicsFolder();
+  
+    if (_database.store.box<Comic>().isEmpty()) {
+      comicLoader.load();
+    }
+  }
 }

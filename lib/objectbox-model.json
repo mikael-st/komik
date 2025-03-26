@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:5865021797219153294",
-      "lastPropertyId": "6:1510722415853727188",
+      "lastPropertyId": "9:8710381894821253077",
       "name": "Comic",
       "properties": [
         {
@@ -38,20 +38,86 @@
           "id": "6:1510722415853727188",
           "name": "path",
           "type": 9
+        },
+        {
+          "id": "8:1689048046462604959",
+          "name": "totalPages",
+          "type": 6
+        },
+        {
+          "id": "9:8710381894821253077",
+          "name": "collectionId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "1:4861892148618494335",
+          "relationTarget": "Collection"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:3441850510698419676",
+      "lastPropertyId": "3:6989065762026602969",
+      "name": "Collection",
+      "properties": [
+        {
+          "id": "1:9061044297226216777",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:6098524084250984005",
+          "name": "title",
+          "type": 9
+        },
+        {
+          "id": "3:6989065762026602969",
+          "name": "description",
+          "type": 9
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "3:4208959831050477538",
+      "lastPropertyId": "3:4142938186539844987",
+      "name": "Reading",
+      "properties": [
+        {
+          "id": "1:5460971256017543726",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:7881367534898903158",
+          "name": "comicId",
+          "type": 11,
+          "flags": 520,
+          "indexId": "2:9168055812902343374",
+          "relationTarget": "Comic"
+        },
+        {
+          "id": "3:4142938186539844987",
+          "name": "page",
+          "type": 6
         }
       ],
       "relations": []
     }
   ],
-  "lastEntityId": "1:5865021797219153294",
-  "lastIndexId": "0:0",
+  "lastEntityId": "3:4208959831050477538",
+  "lastIndexId": "2:9168055812902343374",
   "lastRelationId": "0:0",
   "lastSequenceId": "0:0",
   "modelVersion": 5,
   "modelVersionParserMinimum": 5,
   "retiredEntityUids": [],
   "retiredIndexUids": [],
-  "retiredPropertyUids": [],
+  "retiredPropertyUids": [
+    3119939257715182086
+  ],
   "retiredRelationUids": [],
   "version": 1
 }

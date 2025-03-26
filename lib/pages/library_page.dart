@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:komik/assets/typography.dart';
 import 'package:komik/components/cards/comic_card.dart';
@@ -7,16 +5,15 @@ import 'package:komik/components/cards/reading_comic_card.dart';
 import 'package:komik/components/devider/section_devider.dart';
 import 'package:komik/components/utils/scroller/scroller.dart';
 import 'package:komik/service/dto/comic_reader_infos.dart';
-import 'package:komik/service/models/comic.dart';
-import 'package:komik/service/utils/comic_loader.dart';
+import 'package:komik/service/managers/comic_manager.dart';
+import 'package:komik/service/database/models/comic.dart';
 
 class LibraryPage extends StatefulWidget {
-  // final Stream<List<String>> comics;
-  final ComicLoader comicLoader;
+  final ComicManager comicManager;
 
   const LibraryPage({
     super.key,
-    required this.comicLoader
+    required this.comicManager
   });
 
   @override
@@ -24,11 +21,6 @@ class LibraryPage extends StatefulWidget {
 }
 
 class _LibraryPageState extends State<LibraryPage> {
-  final controller = StreamController<List<String>>();
-  final List<String> numbers = [];
-
-  int value = 0;
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,12 +32,6 @@ class _LibraryPageState extends State<LibraryPage> {
   }
 
   Widget _content(BuildContext context) {
-    Timer.periodic(Duration(seconds: 1), (timer) {
-      value++;
-      numbers.add('$value');
-      controller.add(List.from(numbers));
-    });
-
     return SingleChildScrollView(
       child: Column(
         spacing: 28,
@@ -86,12 +72,14 @@ class _LibraryPageState extends State<LibraryPage> {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16),
           child: StreamBuilder(
-            stream: widget.comicLoader.controller.stream,
+            stream: widget.comicManager.fetch(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return _notFoundComics();
+                return Center(
+                  child: _notFoundComics()
+                );
               }
-  
+            
               return _comicsFounded(context, snapshot.data!);
             }
           )
@@ -100,22 +88,25 @@ class _LibraryPageState extends State<LibraryPage> {
     );
   }
 
-  Widget _comicsFounded(BuildContext context, List<String> comics) {
+  Widget _comicsFounded(BuildContext context, List<Comic> comics) {
     return Column(
       spacing: 12,
       children: comics.map( 
-        (comic) => Text(comic, style: KomikTypography.base)
-        
-        /* ComicCard(
+        (comic) => ComicCard(
           title: comic.title,
           subtitle: 'Edição ${comic.edition}',
           thumb: comic.thumb,
-          callback: () => Navigator.pushNamed(
-                            context,
-                            '/reader',
-                            arguments: comic as ComicReaderInfos
-                          ),
-        )*/
+          callback: () {
+            final infos = ComicReaderInfos();
+              infos.title = comic.title;
+              infos.path = comic.path;
+            Navigator.pushNamed(
+              context,
+              '/reader',
+              arguments: infos
+            );
+          }
+        )
       ).toList()
     );
   }

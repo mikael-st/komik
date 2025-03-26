@@ -6,11 +6,11 @@ import 'package:komik/service/utils/permissions_manager.dart';
 
 class FileManager {
   final PermissionsManager _permissionManager;
-  final StreamController<File> controller = StreamController<File>();
+  final StreamController<FileSystemEntity> controller = StreamController<FileSystemEntity>();
   
   FileManager({
-    required PermissionsManager permissionManager
-  }) : _permissionManager = permissionManager;
+    required PermissionsManager permission_manager,
+  }) : _permissionManager = permission_manager;
 
   Future<void> createComicsFolder() async {
     if (_permissionManager.haveStorageAccess) {
@@ -20,23 +20,22 @@ class FileManager {
     }
   }
 
-  Future<void> fetch() async {
+  Stream<File> fetch() async* {
     if (_permissionManager.haveStorageAccess) {
       try {
-        final path = await ExternalPath.getExternalStoragePublicDirectory('Comics/testes');
+        final path = await ExternalPath.getExternalStoragePublicDirectory('Comics');
         
         final directory = Directory(path);
-
+ 
         final files = await directory.list().toList();
-
-        for (var file in files) {
+                
+        for (final file in files) {
           if (isComicFile(file as File)) {
             await _renameCBR(file);
-            controller.add(file);
+            yield file;
           }
         }
 
-        controller.close();
       } catch (err) {
         throw Exception(err);
       }
@@ -58,7 +57,5 @@ class FileManager {
       await file.rename(file.path.replaceAll('.cbr', '.cbz'));
     }
   }
-
-  Stream<File> get files => controller.stream;
 
 }
