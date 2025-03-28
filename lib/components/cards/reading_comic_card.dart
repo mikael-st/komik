@@ -11,24 +11,29 @@ class ReadingComicCard extends StatelessWidget {
 
   final String    title;
   final String    edition;
+  final Uint8List thumb;
   final int       actualPage;
   final int       totalPages;
+  final Function() callback;
 
   const ReadingComicCard({
     super.key,
     this.width = 332,
     required this.title,
     required this.edition,
+    required this.thumb,
     required this.actualPage,
-    required this.totalPages
+    required this.totalPages,
+    required this.callback
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => Navigator.pushNamed(context, '/reader'),
+      onTap: () => callback(),
       child: Container(
         width: width,
+        clipBehavior: Clip.hardEdge,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(8),
           color: Palette.items,
@@ -46,7 +51,7 @@ class ReadingComicCard extends StatelessWidget {
       children: [
         ComicThumb(
           height: double.infinity,
-          thumb: MemoryImage(Uint8List(0)),
+          thumb: MemoryImage(thumb),
         ),
         _title(),
         OptionsBtn()
@@ -78,7 +83,7 @@ class ReadingComicCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text('Edição $edition', style: KomikTypography.subtitles),
-          Text('$actualPage / $totalPages páginas', style: KomikTypography.subtitles)
+          Text('Página $actualPage / $totalPages', style: KomikTypography.subtitles)
         ],
       )
     );

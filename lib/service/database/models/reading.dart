@@ -6,8 +6,8 @@ class Reading {
   @Id()
   int id = 0;
 
-  final int actualPage;
-  final int totalPages;
+  late int actualPage;
+  late int totalPages;
   
   final comic = ToOne<Comic>();
 

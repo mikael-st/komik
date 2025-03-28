@@ -65,8 +65,23 @@ class LibraryPage extends StatelessWidget {
                 (reading) => ReadingComicCard(
                   title: reading.comic.target!.title,
                   edition: reading.comic.target!.edition,
-                  actualPage: reading.actualPage,
+                  thumb: reading.comic.target!.thumb,
+                  actualPage: reading.actualPage+1,
                   totalPages: reading.totalPages,
+                  callback: () {
+                    ComicReaderInfos infos = ComicReaderInfos();
+                      infos.comicID = reading.comic.target!.id;
+                      infos.title = reading.comic.target!.title;
+                      infos.path = reading.comic.target!.path;
+                      infos.initPage = reading.actualPage;
+                      infos.totalPages = reading.totalPages;
+                      
+                    Navigator.pushNamed(
+                      context,
+                      '/reader',
+                      arguments: infos
+                    );
+                  },
                 ),
               ).toList()
             )
@@ -78,17 +93,16 @@ class LibraryPage extends StatelessWidget {
 
   Widget _comics(BuildContext context) {
     return StreamBuilder(
-            stream: comicManager.fetch(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(
-                  child: _notFoundComics()
-                );
-              }
-
-              return _comicsFounded(context, snapshot.data!);
-            }
+      stream: comicManager.fetch(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return Center(
+            child: _notFoundComics()
           );
+        }
+        return _comicsFounded(context, snapshot.data!);
+      }
+    );
   }
 
   Widget _comicsFounded(BuildContext context, List<Comic> comics) {

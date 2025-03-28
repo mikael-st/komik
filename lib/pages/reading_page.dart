@@ -3,6 +3,7 @@ import 'package:heroicons/heroicons.dart';
 import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
 import 'package:komik/components/cards/reading_comic_card.dart';
+import 'package:komik/service/dto/comic_reader_infos.dart';
 import 'package:komik/service/managers/reading_manager.dart';
 
 class ReadingPage extends StatelessWidget {
@@ -29,15 +30,28 @@ class ReadingPage extends StatelessWidget {
 
             return Column(
               spacing: 12,
-              children: List.generate(8, 
-                (index) => ReadingComicCard(
+              children: snapshot.data!.map(
+                (reading) => ReadingComicCard(
                   width: double.infinity,
-                  title: 'Titulo',
-                  edition: '00',
-                  actualPage: 0,
-                  totalPages: 0,
+                  title: reading.comic.target!.title,
+                  edition: reading.comic.target!.edition,
+                  thumb: reading.comic.target!.thumb,
+                  actualPage: reading.actualPage+1,
+                  totalPages: reading.totalPages,
+                  callback: () {
+                    final infos = ComicReaderInfos();
+                      infos.comicID = reading.comic.target!.id;
+                      infos.title = reading.comic.target!.title;
+                      infos.path = reading.comic.target!.path;
+                      infos.initPage = reading.actualPage;
+                    Navigator.pushNamed(
+                      context,
+                      '/reader',
+                      arguments: infos
+                    );
+                  },
                 )
-              ),
+              ).toList()
             );
           }
         )

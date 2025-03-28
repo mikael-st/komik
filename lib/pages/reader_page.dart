@@ -124,7 +124,7 @@ class _ReaderPageState extends State<ReaderPage> {
   }
 
   Widget _pages() {
-    return Text('$actualPageIndex de ${infos.totalPages} páginas', style: KomikTypography.action_button);
+    return Text('${actualPageIndex+1} de ${infos.totalPages} páginas', style: KomikTypography.action_button);
   }
 
   bool get isNotFirstPage => actualPageIndex > 0;
