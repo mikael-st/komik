@@ -65,8 +65,8 @@ class LibraryPage extends StatelessWidget {
                 (reading) => ReadingComicCard(
                   title: reading.comic.target!.title,
                   edition: reading.comic.target!.edition,
-                  actualPage: reading.comic.target!.actualPage,
-                  totalPages: reading.comic.target!.totalPages,
+                  actualPage: reading.actualPage,
+                  totalPages: reading.totalPages,
                 ),
               ).toList()
             )
@@ -111,6 +111,7 @@ class LibraryPage extends StatelessWidget {
                 thumb: comic.thumb,
                 callback: () {
                   final infos = ComicReaderInfos();
+                    infos.comicID = comic.id;
                     infos.title = comic.title;
                     infos.path = comic.path;
                     infos.initPage = 0;

@@ -75,8 +75,6 @@ class ComicLoader {
       infos.title = title[0];
       infos.subtitle = values[values.length - 1]!=values[0] ? values[values.length - 1] : '';
       infos.edition = values[0];
-      infos.totalPages = fetchPages(fileName).length;
-      infos.actualPage = 0;
 
     return infos;
   }

@@ -60,6 +60,7 @@ class _KomikAppState extends State<KomikApp> {
 
   late ComicManager comicManager;
   late CollectionManager collectionManager;
+  late ReadingManager readingManager;
 
   int index = 0;
 
@@ -85,7 +86,10 @@ class _KomikAppState extends State<KomikApp> {
         '/': (context) => _app(),
         '/search': (context) => SearchPage(),
         '/collection': (context) => CollectionInfoPage(),
-        '/reader': (context) => ReaderPage(fetchPages: comicLoader.fetchPages),
+        '/reader': (context) => ReaderPage(
+                                  fetchPages: comicLoader.fetchPages,
+                                  readingManager: readingManager,
+                                ),
         '/settings': (context) => Settings(),
         '/local-files': (context) => LocalFilesPage(),
         '/edit-comic': (context) => EditComicInfos()
@@ -144,16 +148,15 @@ class _KomikAppState extends State<KomikApp> {
     final pages = {
       0: LibraryPage(
           comicManager: comicManager,
-          readingManager: ReadingManager(
-            box: _database.store.box<Reading>(),
-            comic_repository: comicManager
-          )
+          readingManager: readingManager
         ),
       1: ComicsPage(),
       2: CollectionsPage(
         collectionManager: collectionManager,
       ),
-      3: ReadingPage()
+      3: ReadingPage(
+        readingManager: readingManager,
+      )
     };
 
     return pages[index]!;
@@ -187,7 +190,7 @@ class _KomikAppState extends State<KomikApp> {
               ),
               NavigationDestination(
                 icon: HeroIcon(
-                  HeroIcons.bookmarkSquare,
+                  HeroIcons.bookOpen,
                   style: HeroIconStyle.solid,
                   size: 24,
                   color: Palette.white,
@@ -196,7 +199,7 @@ class _KomikAppState extends State<KomikApp> {
               ),
               NavigationDestination(
                 icon: HeroIcon(
-                  HeroIcons.folder,
+                  HeroIcons.wallet,
                   style: HeroIconStyle.solid,
                   size: 24,
                   color: Palette.white,
@@ -205,7 +208,8 @@ class _KomikAppState extends State<KomikApp> {
               ),
               NavigationDestination(
                 icon: HeroIcon(
-                  HeroIcons.clock,
+                  HeroIcons.bookmarkSquare,
+                  style: HeroIconStyle.solid,
                   size: 24,
                   color: Palette.white,
                 ),
@@ -228,6 +232,10 @@ class _KomikAppState extends State<KomikApp> {
       (_) => setState(() {
         comicManager = ComicManager(box: _database.store.box<Comic>());
         collectionManager = CollectionManager(box: _database.store.box<Collection>());
+        readingManager = ReadingManager(
+          box: _database.store.box<Reading>(),
+          comic_manager: comicManager
+        );
         fileManager = FileManager(permission_manager: permissionManager);
         comicLoader = ComicLoader(
           fileManager: fileManager,

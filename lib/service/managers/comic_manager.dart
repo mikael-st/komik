@@ -24,8 +24,6 @@ class ComicManager {
       title: infos.title,
       subtitle: infos.subtitle,
       edition: infos.edition,
-      actualPage: infos.actualPage,
-      totalPages: infos.totalPages,
       thumb: thumb,
       path: path,
     )..collection.target=collection;

@@ -3,4 +3,5 @@ interface class ComicReaderInfos {
   late String title;
   late String path;
   late int    initPage;
+  late int    totalPages;
 }

@@ -40,22 +40,12 @@
           "type": 9
         },
         {
-          "id": "8:1689048046462604959",
-          "name": "totalPages",
-          "type": 6
-        },
-        {
           "id": "9:8710381894821253077",
           "name": "collectionId",
           "type": 11,
           "flags": 520,
           "indexId": "1:4861892148618494335",
           "relationTarget": "Collection"
-        },
-        {
-          "id": "10:3466599008865706465",
-          "name": "actualPage",
-          "type": 6
         }
       ],
       "relations": []
@@ -86,7 +76,7 @@
     },
     {
       "id": "3:4208959831050477538",
-      "lastPropertyId": "3:4142938186539844987",
+      "lastPropertyId": "5:9008878338535724410",
       "name": "Reading",
       "properties": [
         {
@@ -102,6 +92,16 @@
           "flags": 520,
           "indexId": "2:9168055812902343374",
           "relationTarget": "Comic"
+        },
+        {
+          "id": "4:3840235856389496195",
+          "name": "actualPage",
+          "type": 6
+        },
+        {
+          "id": "5:9008878338535724410",
+          "name": "totalPages",
+          "type": 6
         }
       ],
       "relations": []
@@ -117,7 +117,9 @@
   "retiredIndexUids": [],
   "retiredPropertyUids": [
     3119939257715182086,
-    4142938186539844987
+    4142938186539844987,
+    1689048046462604959,
+    3466599008865706465
   ],
   "retiredRelationUids": [],
   "version": 1

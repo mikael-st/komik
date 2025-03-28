@@ -9,16 +9,20 @@ class ReadingManager {
 
   ReadingManager({
     required Box<Reading> box,
-    required ComicManager comic_repository
-  }) : _box = box, _comicManager = comic_repository;
+    required ComicManager comic_manager
+  }) : _box = box, _comicManager = comic_manager;
 
   void create({
-    required int comicID
+    required int comicID,
+    required int actualPage,
+    required int totalPages
   }) {
     final comic = _comicManager.get(id: comicID);
 
-    final reading = Reading();
-      reading.comic.target = comic;
+    final reading = Reading(
+      actualPage: actualPage,
+      totalPages: totalPages
+    )..comic.target = comic;
 
     _box.put(reading);
   }

@@ -33,24 +33,24 @@ class _CollectionInfoPageState extends State<CollectionInfoPage> {
     final collection = ModalRoute.of(context)!.settings.arguments as Collection;
     
     return Scaffold(
-        appBar: ToolBar(
-          leading: GoBackBtn(),
-        ),
-        body: Container(
-          height: double.infinity,
-          margin: EdgeInsets.symmetric(vertical: 16),
-          child: SingleChildScrollView(
-            clipBehavior: Clip.none,
-            child: Column(
-              spacing: 20,
-              children: [
-                _infos(collection),
-                SectionDevider(text: 'Edições'),
-                collection.comics.isNotEmpty ? _comics(collection.comics) : _noComics()
-              ],
-            )
+      appBar: ToolBar(
+        leading: GoBackBtn(),
+      ),
+      body: Container(
+        height: double.infinity,
+        margin: EdgeInsets.symmetric(vertical: 16),
+        child: SingleChildScrollView(
+          clipBehavior: Clip.none,
+          child: Column(
+            spacing: 20,
+            children: [
+              _infos(collection),
+              SectionDevider(text: 'Edições'),
+              collection.comics.isNotEmpty ? _comics(collection.comics) : _noComics()
+            ],
           )
-        ),
+        )
+      ),
     );
   }
 

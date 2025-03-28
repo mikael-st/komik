@@ -6,13 +6,16 @@ import 'package:komik/assets/palette.dart';
 import 'package:komik/assets/typography.dart';
 import 'package:komik/components/tool-bars/reader_tool_bar.dart';
 import 'package:komik/service/dto/comic_reader_infos.dart';
+import 'package:komik/service/managers/reading_manager.dart';
 
 class ReaderPage extends StatefulWidget {
+  final ReadingManager readingManager;
   final Function(String path) fetchPages;
 
   const ReaderPage({
     super.key,
-    required this.fetchPages
+    required this.fetchPages,
+    required this.readingManager,
   });
 
   @override
@@ -32,8 +35,25 @@ class _ReaderPageState extends State<ReaderPage> {
     pages = widget.fetchPages(
       infos.path
     );
+    infos.totalPages = pages.length;
     actualPageIndex = infos.initPage;
     actualPage = pages[infos.initPage];
+  }
+
+  @override
+  void dispose() {
+    widget.readingManager.create(
+      comicID: infos.comicID,
+      actualPage: actualPageIndex,
+      totalPages: pages.length
+    );
+
+    pages.clear();
+    pages = [];
+    actualPage = MemoryImage(Uint8List(0));
+    actualPageIndex = 0;
+
+    super.dispose();
   }
 
   @override
@@ -44,16 +64,6 @@ class _ReaderPageState extends State<ReaderPage> {
       ),
       body: _content(),
     );
-  }
-
-  @override
-  void dispose() {
-    pages.clear();
-    pages = [];
-    actualPage = MemoryImage(Uint8List(0));
-    actualPageIndex = 0;
-
-    super.dispose();
   }
 
   Widget _content() {
@@ -114,7 +124,7 @@ class _ReaderPageState extends State<ReaderPage> {
   }
 
   Widget _pages() {
-    return Text('$actualPageIndex de ${pages.length} páginas', style: KomikTypography.action_button);
+    return Text('$actualPageIndex de ${infos.totalPages} páginas', style: KomikTypography.action_button);
   }
 
   bool get isNotFirstPage => actualPageIndex > 0;

@@ -58,22 +58,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 9,
             flags: 0),
         obx_int.ModelProperty(
-            id: const obx_int.IdUid(8, 1689048046462604959),
-            name: 'totalPages',
-            type: 6,
-            flags: 0),
-        obx_int.ModelProperty(
             id: const obx_int.IdUid(9, 8710381894821253077),
             name: 'collectionId',
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(1, 4861892148618494335),
-            relationTarget: 'Collection'),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(10, 3466599008865706465),
-            name: 'actualPage',
-            type: 6,
-            flags: 0)
+            relationTarget: 'Collection')
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
@@ -107,7 +97,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(3, 4208959831050477538),
       name: 'Reading',
-      lastPropertyId: const obx_int.IdUid(3, 4142938186539844987),
+      lastPropertyId: const obx_int.IdUid(5, 9008878338535724410),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -121,7 +111,17 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(2, 9168055812902343374),
-            relationTarget: 'Comic')
+            relationTarget: 'Comic'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(4, 3840235856389496195),
+            name: 'actualPage',
+            type: 6,
+            flags: 0),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(5, 9008878338535724410),
+            name: 'totalPages',
+            type: 6,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
@@ -168,7 +168,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [3119939257715182086, 4142938186539844987],
+      retiredPropertyUids: const [
+        3119939257715182086,
+        4142938186539844987,
+        1689048046462604959,
+        3466599008865706465
+      ],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -196,9 +201,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(3, editionOffset);
           fbb.addOffset(4, thumbOffset);
           fbb.addOffset(5, pathOffset);
-          fbb.addInt64(7, object.totalPages);
           fbb.addInt64(8, object.collection.targetId);
-          fbb.addInt64(9, object.actualPage);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -215,18 +218,12 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 10, '');
           final pathParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 14, '');
-          final actualPageParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0);
-          final totalPagesParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           final object = Comic(
               title: titleParam,
               subtitle: subtitleParam,
               thumb: thumbParam,
               edition: editionParam,
-              path: pathParam,
-              actualPage: actualPageParam,
-              totalPages: totalPagesParam)
+              path: pathParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           object.collection.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 20, 0);
@@ -282,17 +279,23 @@ obx_int.ModelDefinition getObjectBoxModel() {
           object.id = id;
         },
         objectToFB: (Reading object, fb.Builder fbb) {
-          fbb.startTable(4);
+          fbb.startTable(6);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.comic.targetId);
+          fbb.addInt64(3, object.actualPage);
+          fbb.addInt64(4, object.totalPages);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-
-          final object = Reading()
+          final actualPageParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 10, 0);
+          final totalPagesParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 12, 0);
+          final object = Reading(
+              actualPage: actualPageParam, totalPages: totalPagesParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           object.comic.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
@@ -329,17 +332,9 @@ class Comic_ {
   static final path =
       obx.QueryStringProperty<Comic>(_entities[0].properties[5]);
 
-  /// See [Comic.totalPages].
-  static final totalPages =
-      obx.QueryIntegerProperty<Comic>(_entities[0].properties[6]);
-
   /// See [Comic.collection].
   static final collection =
-      obx.QueryRelationToOne<Comic, Collection>(_entities[0].properties[7]);
-
-  /// See [Comic.actualPage].
-  static final actualPage =
-      obx.QueryIntegerProperty<Comic>(_entities[0].properties[8]);
+      obx.QueryRelationToOne<Comic, Collection>(_entities[0].properties[6]);
 }
 
 /// [Collection] entity fields to define ObjectBox queries.
@@ -370,4 +365,12 @@ class Reading_ {
   /// See [Reading.comic].
   static final comic =
       obx.QueryRelationToOne<Reading, Comic>(_entities[2].properties[1]);
+
+  /// See [Reading.actualPage].
+  static final actualPage =
+      obx.QueryIntegerProperty<Reading>(_entities[2].properties[2]);
+
+  /// See [Reading.totalPages].
+  static final totalPages =
+      obx.QueryIntegerProperty<Reading>(_entities[2].properties[3]);
 }
