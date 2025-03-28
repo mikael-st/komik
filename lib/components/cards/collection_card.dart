@@ -6,18 +6,16 @@ import 'package:komik/assets/typography.dart';
 import 'package:komik/components/buttons/options_btn.dart';
 import 'package:komik/components/cards/comic_thumb.dart';
 
-class ComicCard extends StatelessWidget {
-  final String    title;
-  final String    subtitle;
-  final String    edition;
-  final Uint8List thumb;
+class CollectionCard extends StatelessWidget {
+  final String        title;
+  final List<String>  editions;
+  final Uint8List     thumb;
   
   final Function() callback;
-  const ComicCard({
+  const CollectionCard({
     super.key,
     required this.title,
-    required this.subtitle,
-    required this.edition,
+    required this.editions,
     required this.thumb,
     required this.callback
   });
@@ -42,7 +40,7 @@ class ComicCard extends StatelessWidget {
       spacing: 12,
       children: [
         _leading(),
-        _title(),
+        _infos(),
         OptionsBtn()
       ],
     );
@@ -60,33 +58,20 @@ class ComicCard extends StatelessWidget {
     );
   }
 
-  Widget _title() {
+  Widget _infos() {
     return Expanded(
       child: Padding(
       padding: EdgeInsets.symmetric(vertical: 12),
       child: Column (
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title, style: KomikTypography.card_title),
-          _subtitles()
+          Text('Edições ${editions.first} - ${editions.last}', style: KomikTypography.subtitles),
         ],
       )
     )
-    );
-  }
-
-  Widget _subtitles() {
-    return Expanded(
-      child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(subtitle, style: KomikTypography.subtitles),
-          Text(edition, style: KomikTypography.subtitles)
-        ],
-      )
     );
   }
 }

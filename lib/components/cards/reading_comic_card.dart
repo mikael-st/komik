@@ -8,9 +8,19 @@ import 'package:komik/components/cards/comic_thumb.dart';
 
 class ReadingComicCard extends StatelessWidget {
   final double width;
+
+  final String    title;
+  final String    edition;
+  final int       actualPage;
+  final int       totalPages;
+
   const ReadingComicCard({
     super.key,
     this.width = 332,
+    required this.title,
+    required this.edition,
+    required this.actualPage,
+    required this.totalPages
   });
 
   @override
@@ -52,7 +62,7 @@ class ReadingComicCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Titulo', style: KomikTypography.card_title),
+          Text(title, style: KomikTypography.card_title),
           _subtitles()
         ],
       )
@@ -67,8 +77,8 @@ class ReadingComicCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Edição 00', style: KomikTypography.subtitles),
-          Text('00 / 00 páginas', style: KomikTypography.subtitles)
+          Text('Edição $edition', style: KomikTypography.subtitles),
+          Text('$actualPage / $totalPages páginas', style: KomikTypography.subtitles)
         ],
       )
     );

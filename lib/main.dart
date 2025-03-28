@@ -18,9 +18,12 @@ import 'package:komik/pages/search_page.dart';
 import 'package:komik/pages/settings/local_files_page.dart';
 import 'package:komik/pages/settings/settings.dart';
 import 'package:komik/service/database/database.dart';
+import 'package:komik/service/database/models/collection.dart';
 import 'package:komik/service/database/models/comic.dart';
+import 'package:komik/service/database/models/reading.dart';
+import 'package:komik/service/managers/collection_manager.dart';
 import 'package:komik/service/managers/comic_manager.dart';
-import 'package:komik/service/repositories/comic_repository.dart';
+import 'package:komik/service/managers/reading_manager.dart';
 // import 'package:komik/service/database/models/comic.dart';
 // import 'package:komik/service/models/comic.dart';
 import 'package:komik/service/utils/cbz_decoder.dart';
@@ -30,6 +33,7 @@ import 'package:komik/service/utils/permissions_manager.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const KomikApp());
 }
 
@@ -54,9 +58,15 @@ class _KomikAppState extends State<KomikApp> {
   late FileManager fileManager;
   late ComicLoader comicLoader;
 
-  late ComicRepository comicRepository;
+  late ComicManager comicManager;
+  late CollectionManager collectionManager;
 
   int index = 0;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +99,7 @@ class _KomikAppState extends State<KomikApp> {
         leading: Logo(),
       ),
       body: FutureBuilder(
-        future: init(),
+        future: initialize(),
         builder: (context, snapshot) {
           return permissionManager.haveStorageAccess
           ? _content(index)
@@ -100,13 +110,13 @@ class _KomikAppState extends State<KomikApp> {
     );
   }
 
-  Widget _loading() {
-    return Center(
-      child: CircularProgressIndicator(
-        color: Palette.details,
-      ),
-    );
-  }
+  // Widget _loading() {
+  //   return Center(
+  //     child: CircularProgressIndicator(
+  //       color: Palette.details,
+  //     ),
+  //   );
+  // }
 
   Widget _acceptStoragePermission() {
     return Center(
@@ -131,13 +141,18 @@ class _KomikAppState extends State<KomikApp> {
   }
 
   Widget _content(int index) {
-    print('Storage Access: ${permissionManager.haveStorageAccess}');
-
     final pages = {
       0: LibraryPage(
-          comicManager: ComicManager(comic_repository: comicRepository)),
+          comicManager: comicManager,
+          readingManager: ReadingManager(
+            box: _database.store.box<Reading>(),
+            comic_repository: comicManager
+          )
+        ),
       1: ComicsPage(),
-      2: CollectionsPage(),
+      2: CollectionsPage(
+        collectionManager: collectionManager,
+      ),
       3: ReadingPage()
     };
 
@@ -204,24 +219,28 @@ class _KomikAppState extends State<KomikApp> {
     );
   }
 
-  Future<void> init() async {
-    await _database.init();
+  Future<void> initialize() async {
+    await _database.init().then(
+      (_) => debugPrint("OBJECT BOX INICIADO")
+    );
 
-    setState(() {
-      comicRepository = ComicRepository(box: _database.store.box<Comic>());
-      fileManager = FileManager(permission_manager: permissionManager);
-      comicLoader = ComicLoader(
+    await permissionManager.request().then(
+      (_) => setState(() {
+        comicManager = ComicManager(box: _database.store.box<Comic>());
+        collectionManager = CollectionManager(box: _database.store.box<Collection>());
+        fileManager = FileManager(permission_manager: permissionManager);
+        comicLoader = ComicLoader(
           fileManager: fileManager,
           decoder: CBZDecoder(decoder: ZipDecoder()),
-          comic_repository: comicRepository);
-    });
-
-    await permissionManager.request();
-    setState(() {});
+          comic_manager: comicManager,
+          collection_manager: collectionManager
+        );
+      })
+    );
 
     await fileManager.createComicsFolder();
-  
-    if (_database.store.box<Comic>().isEmpty()) {
+
+    if (await comicManager.haveNoData()) {
       comicLoader.load();
     }
   }

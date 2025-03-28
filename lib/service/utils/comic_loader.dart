@@ -2,11 +2,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/widgets.dart';
+import 'package:komik/service/database/models/collection.dart';
 import 'package:komik/service/dto/comic_infos.dart';
-import 'package:komik/service/repositories/comic_repository.dart';
+import 'package:komik/service/managers/collection_manager.dart';
+import 'package:komik/service/managers/comic_manager.dart';
 import 'package:komik/service/utils/file_manager.dart';
 import 'package:komik/service/utils/interfaces/file_decorder.dart';
 import 'package:flutter/material.dart';
+import 'package:image/image.dart' as img;
 import 'package:path/path.dart' as path;
 
 class ComicLoader {
@@ -14,26 +17,45 @@ class ComicLoader {
 
   late FileDecoder _decoder;
   
-  late ComicRepository _comicRepository;
+  late ComicManager _comicManager;
+
+  late CollectionManager _collectionManager;
 
   ComicLoader({
     required FileDecoder decoder,
     required FileManager fileManager,
-    required ComicRepository comic_repository,
+    required ComicManager comic_manager,
+    required CollectionManager collection_manager
   }) {
     _fileManager = fileManager;
     _decoder = decoder;
-    _comicRepository = comic_repository;
+    _comicManager = comic_manager;
+    _collectionManager = collection_manager;
   }
   
   void load() async {
     try {
+      debugPrint("LOADING COMICS");
+
       _fileManager.fetch().listen(
         (File file) {
-          _comicRepository.create(
-            infos: fetchInfos(file.path),
+          final infos = fetchInfos(file.path);
+
+          Collection? collection = _collectionManager.findByTitle(title: infos.title);
+          if (collection == null) {
+            int collectionId = _collectionManager.create(
+              title: infos.title,
+              description: ''
+            );
+
+            collection = _collectionManager.get(id: collectionId);
+          }
+
+          _comicManager.create(
+            infos: infos,
             thumb: fetchThumb(file.path),
-            path: file.path
+            path: file.path,
+            collection: collection
           );
         },
         onError: (err) {
@@ -46,22 +68,29 @@ class ComicLoader {
   }
 
   ComicInfos fetchInfos(String fileName) {
-    final values = path.basename(fileName).split('-');
+    final title = path.basename(fileName).replaceAll('.cbz', '').split('#');
+    final values = title[1].split('-');
 
     final infos = ComicInfos();
-      infos.title = values[0];
+      infos.title = title[0];
       infos.subtitle = values[values.length - 1]!=values[0] ? values[values.length - 1] : '';
-      infos.edition = '00';
+      infos.edition = values[0];
       infos.totalPages = fetchPages(fileName).length;
+      infos.actualPage = 0;
 
     return infos;
   }
 
   Uint8List fetchThumb(String filePath) {
+
     try {
       final archives = _decoder.decode(filePath);
       
-      return archives.where((archive) =>  isImage(archive.name) && isThumb(archive.name)).first.content;
+      final bytes = archives.where((archive) =>  isImage(archive.name) && isThumb(archive.name)).first.content;
+
+      img.Image? image = img.decodeJpg(bytes);
+
+      return image != null ? Uint8List.fromList(img.encodeJpg(image, quality: 10)) : Uint8List(0);
     } on PathNotFoundException {
       final extension = path.extension(filePath);
       final fileName = path.basename(filePath).replaceAll(extension, '');

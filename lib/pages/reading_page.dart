@@ -15,7 +15,11 @@ class ReadingPage extends StatelessWidget {
           spacing: 12,
           children: List.generate(8, 
             (index) => ReadingComicCard(
-              width: double.infinity
+              width: double.infinity,
+              title: 'Titulo',
+              edition: '00',
+              actualPage: 0,
+              totalPages: 0,
             )
           ),
         )

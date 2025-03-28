@@ -5,7 +5,7 @@
   "entities": [
     {
       "id": "1:5865021797219153294",
-      "lastPropertyId": "9:8710381894821253077",
+      "lastPropertyId": "10:3466599008865706465",
       "name": "Comic",
       "properties": [
         {
@@ -51,6 +51,11 @@
           "flags": 520,
           "indexId": "1:4861892148618494335",
           "relationTarget": "Collection"
+        },
+        {
+          "id": "10:3466599008865706465",
+          "name": "actualPage",
+          "type": 6
         }
       ],
       "relations": []
@@ -97,11 +102,6 @@
           "flags": 520,
           "indexId": "2:9168055812902343374",
           "relationTarget": "Comic"
-        },
-        {
-          "id": "3:4142938186539844987",
-          "name": "page",
-          "type": 6
         }
       ],
       "relations": []
@@ -116,7 +116,8 @@
   "retiredEntityUids": [],
   "retiredIndexUids": [],
   "retiredPropertyUids": [
-    3119939257715182086
+    3119939257715182086,
+    4142938186539844987
   ],
   "retiredRelationUids": [],
   "version": 1

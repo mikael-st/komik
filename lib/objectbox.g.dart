@@ -24,7 +24,7 @@ final _entities = <obx_int.ModelEntity>[
   obx_int.ModelEntity(
       id: const obx_int.IdUid(1, 5865021797219153294),
       name: 'Comic',
-      lastPropertyId: const obx_int.IdUid(9, 8710381894821253077),
+      lastPropertyId: const obx_int.IdUid(10, 3466599008865706465),
       flags: 0,
       properties: <obx_int.ModelProperty>[
         obx_int.ModelProperty(
@@ -68,7 +68,12 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(1, 4861892148618494335),
-            relationTarget: 'Collection')
+            relationTarget: 'Collection'),
+        obx_int.ModelProperty(
+            id: const obx_int.IdUid(10, 3466599008865706465),
+            name: 'actualPage',
+            type: 6,
+            flags: 0)
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[]),
@@ -116,12 +121,7 @@ final _entities = <obx_int.ModelEntity>[
             type: 11,
             flags: 520,
             indexId: const obx_int.IdUid(2, 9168055812902343374),
-            relationTarget: 'Comic'),
-        obx_int.ModelProperty(
-            id: const obx_int.IdUid(3, 4142938186539844987),
-            name: 'page',
-            type: 6,
-            flags: 0)
+            relationTarget: 'Comic')
       ],
       relations: <obx_int.ModelRelation>[],
       backlinks: <obx_int.ModelBacklink>[])
@@ -168,7 +168,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
       lastSequenceId: const obx_int.IdUid(0, 0),
       retiredEntityUids: const [],
       retiredIndexUids: const [],
-      retiredPropertyUids: const [3119939257715182086],
+      retiredPropertyUids: const [3119939257715182086, 4142938186539844987],
       retiredRelationUids: const [],
       modelVersion: 5,
       modelVersionParserMinimum: 5,
@@ -189,7 +189,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           final editionOffset = fbb.writeString(object.edition);
           final thumbOffset = fbb.writeListInt8(object.thumb);
           final pathOffset = fbb.writeString(object.path);
-          fbb.startTable(10);
+          fbb.startTable(11);
           fbb.addInt64(0, object.id);
           fbb.addOffset(1, titleOffset);
           fbb.addOffset(2, subtitleOffset);
@@ -198,6 +198,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.addOffset(5, pathOffset);
           fbb.addInt64(7, object.totalPages);
           fbb.addInt64(8, object.collection.targetId);
+          fbb.addInt64(9, object.actualPage);
           fbb.finish(fbb.endTable());
           return object.id;
         },
@@ -214,6 +215,8 @@ obx_int.ModelDefinition getObjectBoxModel() {
               .vTableGet(buffer, rootOffset, 10, '');
           final pathParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 14, '');
+          final actualPageParam =
+              const fb.Int64Reader().vTableGet(buffer, rootOffset, 22, 0);
           final totalPagesParam =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 18, 0);
           final object = Comic(
@@ -222,6 +225,7 @@ obx_int.ModelDefinition getObjectBoxModel() {
               thumb: thumbParam,
               edition: editionParam,
               path: pathParam,
+              actualPage: actualPageParam,
               totalPages: totalPagesParam)
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           object.collection.targetId =
@@ -254,15 +258,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final idParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           final titleParam = const fb.StringReader(asciiOptimization: true)
               .vTableGet(buffer, rootOffset, 6, '');
           final descriptionParam =
               const fb.StringReader(asciiOptimization: true)
                   .vTableGet(buffer, rootOffset, 8, '');
           final object = Collection(
-              id: idParam, title: titleParam, description: descriptionParam);
+              title: titleParam, description: descriptionParam)
+            ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           obx_int.InternalToManyAccess.setRelInfo<Collection>(
               object.comics,
               store,
@@ -282,16 +285,14 @@ obx_int.ModelDefinition getObjectBoxModel() {
           fbb.startTable(4);
           fbb.addInt64(0, object.id);
           fbb.addInt64(1, object.comic.targetId);
-          fbb.addInt64(2, object.page);
           fbb.finish(fbb.endTable());
           return object.id;
         },
         objectFromFB: (obx.Store store, ByteData fbData) {
           final buffer = fb.BufferContext(fbData);
           final rootOffset = buffer.derefObject(0);
-          final pageParam =
-              const fb.Int64Reader().vTableGet(buffer, rootOffset, 8, 0);
-          final object = Reading(page: pageParam)
+
+          final object = Reading()
             ..id = const fb.Int64Reader().vTableGet(buffer, rootOffset, 4, 0);
           object.comic.targetId =
               const fb.Int64Reader().vTableGet(buffer, rootOffset, 6, 0);
@@ -335,6 +336,10 @@ class Comic_ {
   /// See [Comic.collection].
   static final collection =
       obx.QueryRelationToOne<Comic, Collection>(_entities[0].properties[7]);
+
+  /// See [Comic.actualPage].
+  static final actualPage =
+      obx.QueryIntegerProperty<Comic>(_entities[0].properties[8]);
 }
 
 /// [Collection] entity fields to define ObjectBox queries.
@@ -365,8 +370,4 @@ class Reading_ {
   /// See [Reading.comic].
   static final comic =
       obx.QueryRelationToOne<Reading, Comic>(_entities[2].properties[1]);
-
-  /// See [Reading.page].
-  static final page =
-      obx.QueryIntegerProperty<Reading>(_entities[2].properties[2]);
 }

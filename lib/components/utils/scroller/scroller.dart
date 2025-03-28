@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 class Scroller extends StatelessWidget {
   final Axis direction;
   final int amount;
-  final Widget child;
+  final List<Widget> children;
   final EdgeInsets? margin;
   const Scroller({
     super.key,
     required this.direction,
     required this.amount,
-    required this.child,
+    required this.children,
     this.margin = const EdgeInsets.all(0)
   });
 
@@ -22,10 +22,7 @@ class Scroller extends StatelessWidget {
       scrollDirection: direction,
       child: Row(
         spacing: 16,
-        children: List.generate(
-          amount,
-          (index) => child
-        ),
+        children: children
       )
       )
     );

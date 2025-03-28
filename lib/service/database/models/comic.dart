@@ -11,6 +11,7 @@ class Comic {
   late String        title;
   late String        subtitle = '';
   late String        edition;
+  late int           actualPage;
   late int           totalPages;
   late Uint8List     thumb;
   late String        path;
@@ -23,6 +24,7 @@ class Comic {
     required this.thumb,
     required this.edition,
     required this.path,
+    required this.actualPage,
     required this.totalPages,
   });
 

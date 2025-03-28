@@ -20,16 +20,10 @@ class ReaderPage extends StatefulWidget {
 }
 
 class _ReaderPageState extends State<ReaderPage> {
-  late List<MemoryImage> pages;
+  late List<MemoryImage> pages = [];
   late ComicReaderInfos infos;
   int actualPageIndex = 0;
   MemoryImage actualPage = MemoryImage(Uint8List(0));
-
-  @override
-  void initState() {
-    super.initState();
-    pages = [];
-  }
 
   @override
   void didChangeDependencies() {
@@ -38,7 +32,8 @@ class _ReaderPageState extends State<ReaderPage> {
     pages = widget.fetchPages(
       infos.path
     );
-    actualPage = pages[actualPageIndex];
+    actualPageIndex = infos.initPage;
+    actualPage = pages[infos.initPage];
   }
 
   @override

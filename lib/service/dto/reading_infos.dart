@@ -1,6 +1,5 @@
-interface class ComicInfos {
+interface class ReadingInfos {
   late String title;
-  late String subtitle;
   late String edition;
   late int    actualPage;
   late int    totalPages;

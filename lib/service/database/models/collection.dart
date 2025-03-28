@@ -4,7 +4,7 @@ import 'package:objectbox/objectbox.dart';
 @Entity()
 class Collection {
   @Id(assignable: true)
-  int id;
+  int id = 0;
   
   late String        title;
   late String        description;
@@ -13,7 +13,6 @@ class Collection {
   final comics = ToMany<Comic>();
 
   Collection({
-    required this.id,
     required this.title,
     required this.description,
   });

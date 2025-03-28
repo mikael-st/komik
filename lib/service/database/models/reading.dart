@@ -8,10 +8,6 @@ class Reading {
 
   final comic = ToOne<Comic>();
 
-  late int page;
-
-  Reading({
-    required this.page,
-  });
+  Reading();
 
 }

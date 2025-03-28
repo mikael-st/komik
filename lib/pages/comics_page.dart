@@ -18,7 +18,8 @@ class ComicsPage extends StatelessWidget {
           children: List.generate(8, 
             (index) => ComicCard(
               title: 'Title',
-              subtitle: 'Edição 00',
+              subtitle: 'Subtitulo',
+              edition: 'Edição 00',
               thumb: Uint8List(0),
               callback: () => Navigator.pushNamed(context, '/reader'),
             )
